@@ -73,6 +73,11 @@ export function breakdownAmount(amount) {
  * @param {string} currency - Currency code
  * @returns {string} - Formatted amount
  */
+// Helper function to format numbers with spaces for readability
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+};
+
 export function formatCurrency(amount, currency = 'MAD') {
   if (!amount && amount !== 0) return '0';
   
@@ -81,22 +86,22 @@ export function formatCurrency(amount, currency = 'MAD') {
   switch (currency) {
     case 'MAD':
     case 'dirham':
-      return `${formatted.toFixed(2)} DH`;
+      return `${formatNumber(formatted.toFixed(2))} DH`;
     case 'USD':
-      return `$${formatted.toFixed(2)}`;
+      return `$${formatNumber(formatted.toFixed(2))}`;
     case 'EUR':
-      return `€${formatted.toFixed(2)}`;
+      return `€${formatNumber(formatted.toFixed(2))}`;
     case 'GBP':
-      return `£${formatted.toFixed(2)}`;
+      return `£${formatNumber(formatted.toFixed(2))}`;
     case 'CAD':
-      return `C$${formatted.toFixed(2)}`;
+      return `C$${formatNumber(formatted.toFixed(2))}`;
     case 'centime':
     case 'franc':
-      return `${formatted.toFixed(2)}`;
+      return `${formatNumber(formatted.toFixed(2))}`;
     case 'ryal':
-      return `${formatted.toFixed(2)}`;
+      return `${formatNumber(formatted.toFixed(2))}`;
     default:
-      return `${formatted.toFixed(2)} ${currency}`;
+      return `${formatNumber(formatted.toFixed(2))} ${currency}`;
   }
 }
 

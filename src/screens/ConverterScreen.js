@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Platform, Modal, FlatList } from 'react-native';
 import {
   View,
   Text,
@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
-import { Picker } from '@react-native-picker/picker';
 
 import { 
   convertMoroccanCurrency, 
@@ -28,6 +27,7 @@ import CurrencyBreakdown from '../components/CurrencyBreakdown';
 
 export default function ConverterScreen() {
   const { t } = useTranslation();
+  const amountInputRef = useRef(null);
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('dirham');
   const [toCurrency, setToCurrency] = useState('ryal');
@@ -37,6 +37,8 @@ export default function ConverterScreen() {
   const [isOnline, setIsOnline] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [isInternationalMode, setIsInternationalMode] = useState(false);
+  const [showFromDropdown, setShowFromDropdown] = useState(false);
+  const [showToDropdown, setShowToDropdown] = useState(false);
 
   const currencies = getAvailableCurrencies();
   const allCurrencies = [...currencies.moroccan, ...currencies.international];
@@ -51,6 +53,17 @@ export default function ConverterScreen() {
       loadExchangeRates();
     }
   }, [isInternationalMode]);
+
+  // Auto-focus the input when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (amountInputRef.current) {
+        amountInputRef.current.focus();
+      }
+    }, 100); // Small delay to ensure component is fully mounted
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const loadExchangeRates = async () => {
     setIsLoading(true);
@@ -107,10 +120,103 @@ export default function ConverterScreen() {
     }
     
     setResult(0); // Clear previous result
+    
+    // Refocus the input after mode change
+    setTimeout(() => {
+      if (amountInputRef.current) {
+        amountInputRef.current.focus();
+      }
+    }, 100);
+  };
+
+  const handleFromCurrencySelect = (currencyCode) => {
+    setFromCurrency(currencyCode);
+    setShowFromDropdown(false);
+    // Recalculate result if amount exists
+    if (amount) {
+      handleConvert();
+    }
+  };
+
+  const handleToCurrencySelect = (currencyCode) => {
+    setToCurrency(currencyCode);
+    setShowToDropdown(false);
+    // Recalculate result if amount exists
+    if (amount) {
+      handleConvert();
+    }
+  };
+
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  };
+
+  const formatInternationalNumber = (num) => {
+    // Format with 2 decimal places for international currencies
+    const formatted = num.toFixed(2);
+    return formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  };
+
+  const parseFormattedNumber = (formattedStr) => {
+    // Remove spaces and convert to number
+    return parseFloat(formattedStr.replace(/\s/g, '')) || 0;
+  };
+
+  const handleAmountChange = (text) => {
+    // Remove any non-numeric characters except decimal point
+    let cleanText = text.replace(/[^0-9.]/g, '');
+    
+    // Handle multiple decimal points
+    const parts = cleanText.split('.');
+    if (parts.length > 2) {
+      cleanText = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    const numericValue = parseFloat(cleanText) || 0;
+    setAmount(cleanText); // Store the raw input for display
+    
+    // Convert and update result
+    if (numericValue > 0) {
+      const converted = isInternationalMode 
+        ? convertWithRates(numericValue, fromCurrency, toCurrency, exchangeRates)
+        : convertMoroccanCurrency(numericValue, fromCurrency, toCurrency);
+      setResult(converted);
+    } else {
+      setResult(0);
+    }
   };
 
   const getCurrencyDisplayName = (currencyCode) => {
     return t(`converter.currencies.${currencyCode}`, { defaultValue: currencyCode });
+  };
+
+  const getCurrencySymbol = (currencyCode) => {
+    const symbols = {
+      // International currencies
+      'MAD': 'د.م.', // Moroccan Dirham
+      'USD': '$',
+      'EUR': '€',
+      'GBP': '£',
+      'JPY': '¥',
+      'CAD': 'C$',
+      'AUD': 'A$',
+      'CHF': 'CHF',
+      'CNY': '¥',
+      'SAR': '﷼',
+      'AED': 'د.إ',
+      // Moroccan currencies (keep full names)
+      'dirham': t('converter.currencies.dirham'),
+      'centime': t('converter.currencies.centime'),
+      'franc': t('converter.currencies.franc'),
+      'ryal': t('converter.currencies.ryal'),
+      'dourou': t('converter.currencies.dourou'),
+      'benduqui': t('converter.currencies.benduqui'),
+      'mouzouna': t('converter.currencies.mouzouna'),
+      'falous': t('converter.currencies.falous'),
+      'qharrouba': t('converter.currencies.qharrouba'),
+      'ouqiya': t('converter.currencies.ouqiya'),
+    };
+    return symbols[currencyCode] || currencyCode;
   };
 
   const getCurrencyIcon = (currencyCode) => {
@@ -199,53 +305,44 @@ export default function ConverterScreen() {
       {/* Large Amount Display */}
       <View style={styles.amountDisplayContainer}>
         <TextInput
+          ref={amountInputRef}
           style={styles.amountDisplay}
-          value={amount}
-          onChangeText={setAmount}
+          value={amount ? formatNumber(amount) : ''}
+          onChangeText={handleAmountChange}
           placeholder="0"
           keyboardType="numeric"
           placeholderTextColor="#C9B99B"
+          autoFocus={true}
+          selectTextOnFocus={true}
         />
       </View>
 
       {/* From and To Currency Row */}
       <View style={styles.currencyRowContainer}>
         <View style={styles.currencySelector}>
-          <Text style={styles.currencyLabel}>FROM</Text>
-          <View style={styles.pickerWrapper}>
-            <Picker
-              selectedValue={fromCurrency}
-              onValueChange={setFromCurrency}
-              style={styles.picker}
-            >
-              {availableCurrencies.map((currency) => (
-                <Picker.Item
-                  key={currency.code}
-                  label={`${getCurrencyIcon(currency.code)} ${getCurrencyDisplayName(currency.code)}`}
-                  value={currency.code}
-                />
-              ))}
-            </Picker>
-          </View>
+          <Text style={styles.currencyLabel}>{t('converter.from')}</Text>
+          <TouchableOpacity 
+            style={styles.pickerWrapper}
+            onPress={() => setShowFromDropdown(true)}
+          >
+            <Text style={styles.pickerText}>
+              {Platform.OS === 'ios' ? '' : getCurrencyIcon(fromCurrency)} {getCurrencyDisplayName(fromCurrency)}
+            </Text>
+            <Text style={styles.dropdownArrow}>▼</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.currencySelector}>
-          <Text style={styles.currencyLabel}>TO</Text>
-          <View style={styles.pickerWrapper}>
-            <Picker
-              selectedValue={toCurrency}
-              onValueChange={setToCurrency}
-              style={styles.picker}
-            >
-              {availableCurrencies.map((currency) => (
-                <Picker.Item
-                  key={currency.code}
-                  label={`${getCurrencyIcon(currency.code)} ${getCurrencyDisplayName(currency.code)}`}
-                  value={currency.code}
-                />
-              ))}
-            </Picker>
-          </View>
+          <Text style={styles.currencyLabel}>{t('converter.to')}</Text>
+          <TouchableOpacity 
+            style={styles.pickerWrapper}
+            onPress={() => setShowToDropdown(true)}
+          >
+            <Text style={styles.pickerText}>
+              {Platform.OS === 'ios' ? '' : getCurrencyIcon(toCurrency)} {getCurrencyDisplayName(toCurrency)}
+            </Text>
+            <Text style={styles.dropdownArrow}>▼</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -273,7 +370,7 @@ export default function ConverterScreen() {
         <View style={styles.resultContainer}>
           <Text style={styles.resultLabel}>{t('converter.result')}</Text>
           <Text style={styles.resultValue}>
-            {formatCurrency(result, toCurrency)}
+            {isInternationalMode ? formatInternationalNumber(result) : formatNumber(result)} {getCurrencySymbol(toCurrency)}
           </Text>
           
           {/* Show visual breakdown if result can be shown in Moroccan currency */}
@@ -292,6 +389,76 @@ export default function ConverterScreen() {
           </Text>
         </TouchableOpacity>
              )}
+
+      {/* From Currency Dropdown Modal */}
+      <Modal
+        visible={showFromDropdown}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowFromDropdown(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowFromDropdown(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select From Currency</Text>
+            <FlatList
+              data={availableCurrencies}
+              keyExtractor={(item) => item.code}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    styles.currencyOption,
+                    fromCurrency === item.code && styles.selectedCurrencyOption
+                  ]}
+                  onPress={() => handleFromCurrencySelect(item.code)}
+                >
+                  <Text style={styles.currencyOptionText}>
+                    {Platform.OS === 'ios' ? '' : getCurrencyIcon(item.code)} {getCurrencyDisplayName(item.code)}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* To Currency Dropdown Modal */}
+      <Modal
+        visible={showToDropdown}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowToDropdown(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowToDropdown(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select To Currency</Text>
+            <FlatList
+              data={availableCurrencies}
+              keyExtractor={(item) => item.code}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    styles.currencyOption,
+                    toCurrency === item.code && styles.selectedCurrencyOption
+                  ]}
+                  onPress={() => handleToCurrencySelect(item.code)}
+                >
+                  <Text style={styles.currencyOptionText}>
+                    {Platform.OS === 'ios' ? '' : getCurrencyIcon(item.code)} {getCurrencyDisplayName(item.code)}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
       </ScrollView>
     </ImageBackground>
   );
@@ -359,6 +526,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0,0,0,0.8)', // Black shadow for contrast
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 3,
+    writingDirection: 'ltr', // Force LTR for numbers
   },
   currencyRowContainer: {
     flexDirection: 'row',
@@ -382,30 +550,70 @@ const styles = StyleSheet.create({
     letterSpacing: 1, // Better letter spacing for readability
   },
   pickerWrapper: {
-    backgroundColor: '#FFFFFF', // White background to match input
-    borderRadius: 25, // Pill-shaped like the input
-    borderWidth: 2, // Added border for better definition
+    backgroundColor: '#FFFFFF',
+    borderRadius: 25,
+    borderWidth: 2,
     borderColor: '#E0E0E0',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 5,
-    minHeight: 56, // Increased height for better visibility
-    ...(Platform.OS === 'ios' ? {
-      overflow: 'hidden',
-      height: 56,
-      justifyContent: 'center',
-    } : {}),
+    minHeight: 56,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
   },
-  picker: {
-    height: 56, // Increased height to match wrapper
-    width: '100%',
-    color: '#000000', // Black text for maximum contrast
+  pickerText: {
+    fontSize: 16,
     fontWeight: '600',
-    fontSize: 16, // Larger font size for better visibility
-    paddingHorizontal: 15, // Add padding for better spacing
-    ...(Platform.OS === 'ios' ? { backgroundColor: 'transparent' } : {}),
+    color: '#000000',
+    flex: 1,
+  },
+  dropdownArrow: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    padding: 20,
+    margin: 20,
+    maxHeight: '70%',
+    minWidth: '80%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2D5F3E',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  currencyOption: {
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  selectedCurrencyOption: {
+    backgroundColor: '#E8F5E8',
+  },
+  currencyOptionText: {
+    fontSize: 16,
+    color: '#333',
   },
   convertButtonContainer: {
     marginBottom: 20,
@@ -461,6 +669,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 2 }, // Larger shadow offset
     textShadowRadius: 3, // More shadow blur
     textAlign: 'center',
+    writingDirection: 'ltr', // Force LTR for numbers
   },
   refreshButton: {
     backgroundColor: '#27AE60', // Moroccan green

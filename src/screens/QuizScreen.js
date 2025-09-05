@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertMoroccanCurrency } from '../utils/currencyUtils';
 
 const QUIZ_STORAGE_KEY = 'quiz_scores';
-const QUESTIONS_PER_GAME = 20;
+const QUESTIONS_PER_GAME = 25;
 const QUESTIONS_PER_STAGE = 5;
 
 export default function QuizScreen() {
@@ -32,6 +32,8 @@ export default function QuizScreen() {
   const [isCorrect, setIsCorrect] = useState(false);
   const [bestScore, setBestScore] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(1));
+  const [stageBreak, setStageBreak] = useState(false);
+  const [stageScore, setStageScore] = useState(0);
 
   useEffect(() => {
     loadBestScore();
@@ -218,7 +220,46 @@ export default function QuizScreen() {
       },
     ];
 
-    questionPool.push(...stage1Questions, ...stage2Questions, ...stage3Questions, ...stage4Questions);
+    // Stage 5: Big numbers - Dirham to Centime (Questions 21-25)
+    const stage5Questions = [
+      {
+        stage: 5,
+        question: t('quiz.questions.1000dh'),
+        answer: convertMoroccanCurrency(1000, 'dirham', 'centime'),
+        options: [10000, 100000, 1000000, 10000000],
+        unit: 'centimes'
+      },
+      {
+        stage: 5,
+        question: t('quiz.questions.5000dh'),
+        answer: convertMoroccanCurrency(5000, 'dirham', 'centime'),
+        options: [50000, 500000, 5000000, 50000000],
+        unit: 'centimes'
+      },
+      {
+        stage: 5,
+        question: t('quiz.questions.10000dh'),
+        answer: convertMoroccanCurrency(10000, 'dirham', 'centime'),
+        options: [100000, 1000000, 10000000, 100000000],
+        unit: 'centimes'
+      },
+      {
+        stage: 5,
+        question: t('quiz.questions.50000dh'),
+        answer: convertMoroccanCurrency(50000, 'dirham', 'centime'),
+        options: [500000, 5000000, 50000000, 500000000],
+        unit: 'centimes'
+      },
+      {
+        stage: 5,
+        question: t('quiz.questions.100000dh'),
+        answer: convertMoroccanCurrency(100000, 'dirham', 'centime'),
+        options: [1000000, 10000000, 100000000, 1000000000],
+        unit: 'centimes'
+      },
+    ];
+
+    questionPool.push(...stage1Questions, ...stage2Questions, ...stage3Questions, ...stage4Questions, ...stage5Questions);
     return questionPool;
   };
 
@@ -282,12 +323,26 @@ export default function QuizScreen() {
       endGame();
     } else {
       const nextQuestionIndex = currentQuestion + 1;
-      setCurrentQuestion(nextQuestionIndex);
-      
-      // Update stage based on question number
       const newStage = Math.ceil((nextQuestionIndex + 1) / QUESTIONS_PER_STAGE);
-      setCurrentStage(newStage);
+      
+      // Check if we're moving to a new stage
+      if (newStage > currentStage) {
+        // Calculate stage score (correct answers in current stage)
+        const stageStartQuestion = (currentStage - 1) * QUESTIONS_PER_STAGE;
+        const stageEndQuestion = currentStage * QUESTIONS_PER_STAGE;
+        const stageCorrectAnswers = questions.slice(stageStartQuestion, stageEndQuestion).length;
+        setStageScore(stageCorrectAnswers);
+        setStageBreak(true);
+        setCurrentStage(newStage);
+      } else {
+        setCurrentQuestion(nextQuestionIndex);
+      }
     }
+  };
+
+  const continueToNextStage = () => {
+    setStageBreak(false);
+    setCurrentQuestion(currentQuestion + 1);
   };
 
   const endGame = () => {
@@ -305,6 +360,8 @@ export default function QuizScreen() {
     setCurrentStage(1);
     setSelectedAnswer(null);
     setShowResult(false);
+    setStageBreak(false);
+    setStageScore(0);
   };
 
   const getBanknoteImage = (value) => {
@@ -322,6 +379,10 @@ export default function QuizScreen() {
       default:
         return require('../../assets/currency/bills/bill_20dh.png');
     }
+  };
+
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   };
 
   const getScoreBanknotes = () => {
@@ -359,6 +420,41 @@ export default function QuizScreen() {
               <Text style={styles.startButtonText}>{t('quiz.start')}</Text>
             </TouchableOpacity>
           </View>
+        </View>
+      </ImageBackground>
+    );
+  }
+
+  if (stageBreak) {
+    return (
+      <ImageBackground 
+        source={require('../../assets/background.png')} 
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <View style={styles.stageBreakContainer}>
+          <Text style={styles.stageBreakTitle}>
+            {t('quiz.stageComplete')} {currentStage - 1}!
+          </Text>
+          <Text style={styles.stageBreakSubtitle}>
+            {t('quiz.stageScore')}: {stageScore}/{QUESTIONS_PER_STAGE}
+          </Text>
+          <View style={styles.stageBreakStats}>
+            <Text style={styles.stageBreakText}>
+              {t('quiz.totalScore')}: {score} DH
+            </Text>
+            <Text style={styles.stageBreakText}>
+              {t('quiz.correctAnswers')}: {correctAnswers}/{QUESTIONS_PER_GAME}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={continueToNextStage}
+          >
+            <Text style={styles.continueButtonText}>
+              {t('quiz.continueToStage')} {currentStage}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     );
@@ -420,11 +516,11 @@ export default function QuizScreen() {
       <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <View style={styles.header}>
           <View style={styles.questionInfo}>
-            <Text style={styles.questionCounter}>
-              {t('quiz.question')} {currentQuestion + 1}/{questions.length}
-            </Text>
+          <Text style={styles.questionCounter}>
+            {t('quiz.question')} {currentQuestion + 1}/{questions.length}
+          </Text>
             <Text style={styles.stageInfo}>
-              {t('quiz.stage')} {currentStage}/4
+              {t('quiz.stage')} {currentStage}/5
             </Text>
           </View>
           <View style={styles.scoreContainer}>
@@ -445,6 +541,17 @@ export default function QuizScreen() {
             </View>
           </View>
         </View>
+
+        {showResult && (
+          <View style={styles.topResultContainer}>
+            <Text style={[
+              styles.topResultText,
+              { color: isCorrect ? '#4CAF50' : '#F44336' }
+            ]}>
+              {isCorrect ? t('quiz.correct') : t('quiz.incorrect')}
+          </Text>
+        </View>
+        )}
 
         <View style={styles.questionContainer}>
           <Text style={styles.questionText}>{question.question}</Text>
@@ -468,22 +575,12 @@ export default function QuizScreen() {
                 selectedAnswer === option && styles.selectedOptionText,
                 selectedAnswer !== null && option === question.answer && styles.correctOptionText,
               ]}>
-                {option} {question.unit}
+                {formatNumber(option)} {question.unit}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        {showResult && (
-          <View style={styles.resultContainer}>
-            <Text style={[
-              styles.resultText,
-              { color: isCorrect ? '#4CAF50' : '#F44336' }
-            ]}>
-              {isCorrect ? t('quiz.correct') : t('quiz.incorrect')}
-            </Text>
-          </View>
-        )}
       </Animated.View>
     </ImageBackground>
   );
@@ -583,6 +680,7 @@ const styles = StyleSheet.create({
     color: '#2D5F3E',
     fontWeight: 'bold',
     marginBottom: 8,
+    writingDirection: 'ltr', // Force LTR for numbers
   },
   banknoteContainer: {
     flexDirection: 'row',
@@ -647,6 +745,7 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
     fontWeight: '500',
+    writingDirection: 'ltr', // Force LTR for numbers
   },
   selectedOptionText: {
     fontWeight: 'bold',
@@ -696,11 +795,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2D5F3E',
     marginBottom: 8,
+    writingDirection: 'ltr', // Force LTR for numbers
   },
   finalScoreTotal: {
     fontSize: 18,
     color: '#666',
     marginBottom: 15,
+    writingDirection: 'ltr', // Force LTR for numbers
   },
   finalBanknoteContainer: {
     flexDirection: 'row',
@@ -743,6 +844,79 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  // Stage break styles
+  stageBreakContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  stageBreakTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#2D5F3E',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  stageBreakSubtitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#F39C12',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  stageBreakStats: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 30,
+    alignItems: 'center',
+  },
+  stageBreakText: {
+    fontSize: 18,
+    color: '#2D5F3E',
+    marginBottom: 10,
+    textAlign: 'center',
+    writingDirection: 'ltr', // Force LTR for numbers
+  },
+  continueButton: {
+    backgroundColor: '#2D5F3E',
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  continueButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  // Top result message styles
+  topResultContainer: {
+    position: 'absolute',
+    top: 100,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  topResultText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0,0,0,0.8)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 3,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
 });
 

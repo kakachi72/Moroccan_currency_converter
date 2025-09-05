@@ -9,6 +9,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import i18n from '../translations/i18n';
 import { fetchExchangeRates, convertWithRates } from '../services/currencyApi';
 import { DENOMINATIONS } from '../utils/currencyUtils';
 
@@ -16,6 +17,9 @@ export default function TouristScreen() {
   const { t } = useTranslation();
   const [exchangeRates, setExchangeRates] = useState(null);
   const [selectedTab, setSelectedTab] = useState('bills');
+
+  // Check if current language is Arabic for RTL support
+  const isArabic = i18n.language === 'ar';
 
   useEffect(() => {
     loadExchangeRates();
@@ -33,12 +37,55 @@ export default function TouristScreen() {
   const bills = DENOMINATIONS.filter(d => d.type === 'bill');
   const coins = DENOMINATIONS.filter(d => d.type === 'coin');
 
-  const commonPrices = [
-    { key: 'bread', price: 3, icon: '🍞' },
-    { key: 'coffee', price: 8, icon: '☕' },
-    { key: 'taxi', price: 15, icon: '🚕' },
-    { key: 'water', price: 5, icon: '💧' },
-    { key: 'meal', price: 80, icon: '🍽️' },
+  const getCurrencyHistory = () => [
+    {
+      currency: 'dirham',
+      title: t('tourist.currencyHistory.dirham.title'),
+      description: t('tourist.currencyHistory.dirham.description'),
+      period: t('tourist.currencyHistory.dirham.period'),
+      icon: '🪙',
+      facts: [
+        t('tourist.currencyHistory.dirham.fact1'),
+        t('tourist.currencyHistory.dirham.fact2'),
+        t('tourist.currencyHistory.dirham.fact3')
+      ]
+    },
+    {
+      currency: 'ryal',
+      title: t('tourist.currencyHistory.ryal.title'),
+      description: t('tourist.currencyHistory.ryal.description'),
+      period: t('tourist.currencyHistory.ryal.period'),
+      icon: '🪙',
+      facts: [
+        t('tourist.currencyHistory.ryal.fact1'),
+        t('tourist.currencyHistory.ryal.fact2'),
+        t('tourist.currencyHistory.ryal.fact3')
+      ]
+    },
+    {
+      currency: 'franc',
+      title: t('tourist.currencyHistory.franc.title'),
+      description: t('tourist.currencyHistory.franc.description'),
+      period: t('tourist.currencyHistory.franc.period'),
+      icon: '🪙',
+      facts: [
+        t('tourist.currencyHistory.franc.fact1'),
+        t('tourist.currencyHistory.franc.fact2'),
+        t('tourist.currencyHistory.franc.fact3')
+      ]
+    },
+    {
+      currency: 'centime',
+      title: t('tourist.currencyHistory.centime.title'),
+      description: t('tourist.currencyHistory.centime.description'),
+      period: t('tourist.currencyHistory.centime.period'),
+      icon: '🪙',
+      facts: [
+        t('tourist.currencyHistory.centime.fact1'),
+        t('tourist.currencyHistory.centime.fact2'),
+        t('tourist.currencyHistory.centime.fact3')
+      ]
+    }
   ];
 
   const convertToInternational = (amountInDH, currency) => {
@@ -117,27 +164,28 @@ export default function TouristScreen() {
     </View>
   );
 
-  const renderPriceItem = (item) => (
-    <View key={item.key} style={styles.priceCard}>
-      <View style={styles.priceHeader}>
-        <Text style={styles.priceIcon}>{item.icon}</Text>
-        <Text style={styles.priceTitle}>{t(`tourist.${item.key}`)}</Text>
-      </View>
-      <View style={styles.priceDetails}>
-        <Text style={styles.priceMAD}>{item.price} DH</Text>
-        <View style={styles.internationalPrices}>
-          {exchangeRates && (
-            <>
-              <Text style={styles.internationalPrice}>
-                ≈ ${convertToInternational(item.price, 'USD')?.toFixed(2)}
-              </Text>
-              <Text style={styles.internationalPrice}>
-                ≈ €{convertToInternational(item.price, 'EUR')?.toFixed(2)}
-              </Text>
-            </>
-          )}
+  const renderCurrencyHistory = () => (
+    <View style={styles.historyList}>
+      {getCurrencyHistory().map((currency, index) => (
+        <View key={currency.currency} style={styles.historyCard}>
+          <View style={[styles.historyHeader, isArabic && styles.historyHeaderRTL]}>
+            <Text style={[styles.historyIcon, isArabic && styles.historyIconRTL]}>{currency.icon}</Text>
+            <View style={[styles.historyTitleContainer, isArabic && styles.historyTitleContainerRTL]}>
+              <Text style={[styles.historyTitle, isArabic && styles.historyTitleRTL]}>{currency.title}</Text>
+              <Text style={[styles.historyPeriod, isArabic && styles.historyPeriodRTL]}>{currency.period}</Text>
+            </View>
+          </View>
+          <Text style={[styles.historyDescription, isArabic && styles.historyDescriptionRTL]}>{currency.description}</Text>
+          <View style={styles.historyFacts}>
+            {currency.facts.map((fact, factIndex) => (
+              <View key={factIndex} style={[styles.factItem, isArabic && styles.factItemRTL]}>
+                <Text style={styles.factBullet}>•</Text>
+                <Text style={[styles.factText, isArabic && styles.factTextRTL]}>{fact}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
+      ))}
     </View>
   );
 
@@ -166,11 +214,11 @@ export default function TouristScreen() {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, selectedTab === 'prices' && styles.activeTab]}
-          onPress={() => setSelectedTab('prices')}
+          style={[styles.tab, selectedTab === 'history' && styles.activeTab]}
+          onPress={() => setSelectedTab('history')}
         >
-          <Text style={[styles.tabText, selectedTab === 'prices' && styles.activeTabText]}>
-            {t('tourist.commonItems')}
+          <Text style={[styles.tabText, selectedTab === 'history' && styles.activeTabText]}>
+            {t('tourist.history')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -199,14 +247,14 @@ export default function TouristScreen() {
         </View>
       )}
 
-      {selectedTab === 'prices' && (
+      {selectedTab === 'history' && (
         <View style={styles.content}>
-          <Text style={styles.sectionTitle}>{t('tourist.commonItems')}</Text>
+          <Text style={styles.sectionTitle}>{t('tourist.history')}</Text>
           <Text style={styles.sectionDescription}>
-            Typical prices for common items in Morocco (approximate values).
+            {t('tourist.historyDescription')}
           </Text>
-          <View style={styles.pricesContainer}>
-            {commonPrices.map(renderPriceItem)}
+          <View style={styles.historyContainer}>
+            {renderCurrencyHistory()}
           </View>
         </View>
       )}
@@ -380,6 +428,74 @@ const styles = StyleSheet.create({
     color: '#666',
     marginVertical: 1,
   },
+  historyContainer: {
+    marginTop: 10,
+  },
+  historyList: {
+    marginTop: 10,
+  },
+  historyCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  historyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  historyIcon: {
+    fontSize: 32,
+    marginRight: 16,
+    textAlign: 'center',
+    minWidth: 40,
+  },
+  historyTitleContainer: {
+    flex: 1,
+  },
+  historyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2D5F3E',
+    marginBottom: 4,
+  },
+  historyPeriod: {
+    fontSize: 14,
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  historyDescription: {
+    fontSize: 16,
+    color: '#333',
+    lineHeight: 24,
+    marginBottom: 16,
+  },
+  historyFacts: {
+    marginTop: 8,
+  },
+  factItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+  },
+  factBullet: {
+    fontSize: 16,
+    color: '#2D5F3E',
+    marginRight: 12,
+    marginTop: 2,
+  },
+  factText: {
+    fontSize: 15,
+    color: '#555',
+    lineHeight: 22,
+    flex: 1,
+  },
   conversionTip: {
     backgroundColor: '#e8f5e8',
     margin: 20,
@@ -398,5 +514,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
+  },
+  // RTL styles for Arabic
+  historyHeaderRTL: {
+    flexDirection: 'row-reverse',
+  },
+  historyIconRTL: {
+    marginRight: 0,
+    marginLeft: 16,
+  },
+  historyTitleContainerRTL: {
+    alignItems: 'flex-end',
+  },
+  historyTitleRTL: {
+    textAlign: 'right',
+  },
+  historyPeriodRTL: {
+    textAlign: 'right',
+  },
+  historyDescriptionRTL: {
+    textAlign: 'right',
+  },
+  factItemRTL: {
+    flexDirection: 'row-reverse',
+  },
+  factTextRTL: {
+    textAlign: 'right',
   },
 });

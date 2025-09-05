@@ -8,6 +8,7 @@ import {
   Switch,
   Alert,
   ImageBackground,
+  Share,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -90,6 +91,19 @@ export default function SettingsScreen() {
     );
   };
 
+  const shareApp = async () => {
+    try {
+      const result = await Share.share({
+        message: `${t('settings.shareMessage')}\n\n${t('settings.shareLink')}`,
+        title: t('settings.shareTitle'),
+        url: t('settings.shareLink'),
+      });
+    } catch (error) {
+      console.log('Error sharing app:', error);
+      Alert.alert(t('common.error'), 'Failed to share app');
+    }
+  };
+
   return (
     <ImageBackground 
       source={require('../../assets/background.png')} 
@@ -146,22 +160,14 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('settings.preferences')}</Text>
+        <Text style={styles.sectionTitle}>{t('settings.share')}</Text>
         
-        <View style={styles.settingItem}>
-          <View style={styles.settingInfo}>
-            <Text style={styles.settingLabel}>{t('settings.offlineMode')}</Text>
-            <Text style={styles.settingDescription}>
-              {t('settings.offlineModeDescription')}
-            </Text>
-          </View>
-          <Switch
-            value={offlineMode}
-            onValueChange={toggleOfflineMode}
-            trackColor={{ false: '#767577', true: '#81b0ff' }}
-            thumbColor={offlineMode ? '#2D5F3E' : '#f4f3f4'}
-          />
-        </View>
+        <TouchableOpacity style={styles.actionButton} onPress={shareApp}>
+          <Text style={styles.actionButtonText}>{t('settings.shareApp')}</Text>
+          <Text style={styles.actionButtonDescription}>
+            {t('settings.shareDescription')}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.section}>

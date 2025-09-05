@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   StatusBar,
   ImageBackground,
+  Image,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -49,8 +50,11 @@ export default function WelcomeScreen({ onLanguageSelect }) {
         
         <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>Moroccan Currency Converter</Text>
-          <Text style={styles.subtitle}>Choose your language</Text>
+          <Image 
+            source={require('../../assets/logo.png')} 
+            style={styles.logo}
+            resizeMode="contain"
+          />
         </View>
 
         <View style={styles.languageContainer}>
@@ -93,6 +97,16 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginTop: 60,
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   title: {
     fontSize: 32,
@@ -139,7 +153,11 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: '#e0e0e0',
+    color: '#fff',
     textAlign: 'center',
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0,0,0,0.8)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });

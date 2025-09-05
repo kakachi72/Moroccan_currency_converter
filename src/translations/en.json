@@ -24,23 +24,59 @@
       "USD": "US Dollar",
       "EUR": "Euro",
       "GBP": "British Pound",
-      "CAD": "Canadian Dollar"
+      "CAD": "Canadian Dollar",
+      "dourou": "Dourou",
+      "benduqui": "Benduqui",
+      "mouzouna": "Mouzouna",
+      "falous": "Falous",
+      "qharrouba": "Qharrouba",
+      "ouqiya": "Ouqiya"
     }
   },
   "tourist": {
     "title": "Currency Guide for Tourists",
     "bills": "Bills",
     "coins": "Coins",
-    "commonItems": "Common Prices",
-    "bread": "Bread",
-    "coffee": "Coffee",
-    "taxi": "Taxi (1 km)",
-    "water": "Water Bottle",
-    "meal": "Restaurant Meal"
+    "history": "Currency History",
+    "historyDescription": "Discover the fascinating history behind Morocco's unique currency system and why we have multiple currencies.",
+    "currencyHistory": {
+      "dirham": {
+        "title": "Moroccan Dirham (DH)",
+        "description": "The modern official currency of Morocco, introduced in 1960 to replace the Moroccan franc.",
+        "period": "Since 1960",
+        "fact1": "Named after the Arabic word 'dirham' meaning 'drachma'",
+        "fact2": "Replaced the Moroccan franc at a rate of 1 DH = 100 francs",
+        "fact3": "Features King Mohammed VI and Moroccan landmarks on banknotes"
+      },
+      "ryal": {
+        "title": "Ryal (Real)",
+        "description": "An ancient currency unit that predates the dirham, still used in traditional contexts.",
+        "period": "Historical - Still in use",
+        "fact1": "Originally a Spanish silver coin from the 15th century",
+        "fact2": "1 ryal = 5 centimes (0.05 DH) in modern conversion",
+        "fact3": "Still used in traditional markets and rural areas"
+      },
+      "franc": {
+        "title": "Moroccan Franc",
+        "description": "The predecessor to the dirham, used during the French protectorate period.",
+        "period": "1912-1960",
+        "fact1": "Introduced during French colonial rule in 1912",
+        "fact2": "1 franc = 1 centime = 0.01 DH in modern terms",
+        "fact3": "Replaced by the dirham in 1960 for national identity"
+      },
+      "centime": {
+        "title": "Centime",
+        "description": "The smallest unit of Moroccan currency, equivalent to 1/100th of a dirham.",
+        "period": "Since 1960",
+        "fact1": "100 centimes = 1 dirham",
+        "fact2": "Used for small transactions and precise pricing",
+        "fact3": "Available as coins in 1, 5, 10, 20, and 50 centime denominations"
+      }
+    }
   },
   "quiz": {
     "title": "Moroccan Currency Quiz",
-    "description": "Test your knowledge of Moroccan currency with 20 questions across 4 stages!",
+    "description": "Test your knowledge of Moroccan currency with 25 questions across 5 stages!",
     "question": "Question",
     "stage": "Stage",
     "score": "Score",
@@ -54,6 +90,11 @@
     "bestScore": "Best Score",
     "start": "Start Game",
     "newRecord": "New Record",
+    "stageComplete": "Stage Complete",
+    "stageScore": "Stage Score",
+    "totalScore": "Total Score",
+    "correctAnswers": "Correct Answers",
+    "continueToStage": "Continue to Stage",
     "questions": {
       "5000francs": "5000 francs = how many dirhams?",
       "20ryals": "20 ryals = how many dirhams?",
@@ -75,6 +116,11 @@
       "2000francs": "2000 francs = how many dirhams?",
       "90dh": "90 dirhams = how many ryals?",
       "3500centimes": "3500 centimes = how many dirhams?",
+      "1000dh": "1 000 dirhams = how many centimes?",
+      "5000dh": "5 000 dirhams = how many centimes?",
+      "10000dh": "10 000 dirhams = how many centimes?",
+      "50000dh": "50 000 dirhams = how many centimes?",
+      "100000dh": "100 000 dirhams = how many centimes?",
       "today": "today"
     }
   },
@@ -86,7 +132,12 @@
     "french": "French",
     "offlineMode": "Offline Mode",
     "offlineModeDescription": "Use app offline for Moroccan conversions only",
-    "preferences": "Preferences",
+    "share": "Share",
+    "shareApp": "Share the App",
+    "shareDescription": "Share this app with friends and family",
+    "shareTitle": "Moroccan Currency Converter",
+    "shareMessage": "Check out this amazing Moroccan Currency Converter app! Perfect for tourists and anyone interested in Moroccan currency. Download it now!",
+    "shareLink": "https://play.google.com/store/apps/details?id=com.moroccanmoneyconverter.app",
     "data": "Data",
     "appInfo": "App Info",
     "clearCache": "Clear Cache",

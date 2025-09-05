@@ -3,6 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Text } from 'react-native';
 
 import ConverterScreen from '../screens/ConverterScreen';
 import TouristScreen from '../screens/TouristScreen';
@@ -10,6 +12,29 @@ import QuizScreen from '../screens/QuizScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
+
+// Custom Header Component with Gradient Background
+const GradientHeader = ({ title }) => (
+  <LinearGradient
+    colors={['#2D5F3E', '#8B0000']} // Green to Red gradient
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 0 }}
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <Text style={{
+      color: 'white',
+      fontSize: 18,
+      fontWeight: 'bold',
+      backgroundColor: 'transparent',
+    }}>
+      {title}
+    </Text>
+  </LinearGradient>
+);
 
 export default function AppNavigator() {
   const { t } = useTranslation();
@@ -36,12 +61,13 @@ export default function AppNavigator() {
           tabBarActiveTintColor: '#2D5F3E',
           tabBarInactiveTintColor: 'gray',
           headerStyle: {
-            backgroundColor: '#2D5F3E',
+            backgroundColor: 'transparent',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+          headerBackground: () => <GradientHeader />,
         })}
       >
         <Tab.Screen 

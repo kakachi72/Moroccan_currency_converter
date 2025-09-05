@@ -24,23 +24,59 @@
       "USD": "Dollar Américain",
       "EUR": "Euro",
       "GBP": "Livre Sterling",
-      "CAD": "Dollar Canadien"
+      "CAD": "Dollar Canadien",
+      "dourou": "Dourou",
+      "benduqui": "Benduqui",
+      "mouzouna": "Mouzouna",
+      "falous": "Falous",
+      "qharrouba": "Qharrouba",
+      "ouqiya": "Ouqiya"
     }
   },
   "tourist": {
     "title": "Guide Monétaire pour Touristes",
     "bills": "Billets",
     "coins": "Pièces",
-    "commonItems": "Prix Courants",
-    "bread": "Pain",
-    "coffee": "Café",
-    "taxi": "Taxi (1 km)",
-    "water": "Bouteille d'eau",
-    "meal": "Repas au restaurant"
+    "history": "Histoire",
+    "historyDescription": "Découvrez l'histoire fascinante du système monétaire unique du Maroc et pourquoi nous avons plusieurs devises.",
+    "currencyHistory": {
+      "dirham": {
+        "title": "Dirham Marocain (DH)",
+        "description": "La monnaie officielle moderne du Maroc, introduite en 1960 pour remplacer le franc marocain.",
+        "period": "Depuis 1960",
+        "fact1": "Nommé d'après le mot arabe 'dirham' signifiant 'drachme'",
+        "fact2": "A remplacé le franc marocain au taux de 1 DH = 100 francs",
+        "fact3": "Présente le roi Mohammed VI et des monuments marocains sur les billets"
+      },
+      "ryal": {
+        "title": "Ryal (Real)",
+        "description": "Une unité monétaire ancienne qui précède le dirham, encore utilisée dans des contextes traditionnels.",
+        "period": "Historique - Encore en usage",
+        "fact1": "À l'origine une pièce d'argent espagnole du 15ème siècle",
+        "fact2": "1 ryal = 5 centimes (0,05 DH) en conversion moderne",
+        "fact3": "Encore utilisé dans les marchés traditionnels et les zones rurales"
+      },
+      "franc": {
+        "title": "Franc Marocain",
+        "description": "Le prédécesseur du dirham, utilisé pendant la période du protectorat français.",
+        "period": "1912-1960",
+        "fact1": "Introduit pendant la domination coloniale française en 1912",
+        "fact2": "1 franc = 1 centime = 0,01 DH en termes modernes",
+        "fact3": "Remplacé par le dirham en 1960 pour l'identité nationale"
+      },
+      "centime": {
+        "title": "Centime",
+        "description": "La plus petite unité de la monnaie marocaine, équivalente à 1/100ème de dirham.",
+        "period": "Depuis 1960",
+        "fact1": "100 centimes = 1 dirham",
+        "fact2": "Utilisé pour les petites transactions et la tarification précise",
+        "fact3": "Disponible en pièces de 1, 5, 10, 20 et 50 centimes"
+      }
+    }
   },
   "quiz": {
     "title": "Quiz de Monnaie Marocaine",
-    "description": "Testez vos connaissances de la monnaie marocaine avec 20 questions en 4 étapes !",
+    "description": "Testez vos connaissances de la monnaie marocaine avec 25 questions en 5 étapes !",
     "question": "Question",
     "stage": "Étape",
     "score": "Score",
@@ -54,6 +90,11 @@
     "bestScore": "Meilleur score",
     "start": "Commencer le jeu",
     "newRecord": "Nouveau record",
+    "stageComplete": "Étape terminée",
+    "stageScore": "Score de l'étape",
+    "totalScore": "Score total",
+    "correctAnswers": "Réponses correctes",
+    "continueToStage": "Continuer à l'étape",
     "questions": {
       "5000francs": "5000 francs = combien de dirhams ?",
       "20ryals": "20 ryals = combien de dirhams ?",
@@ -75,6 +116,11 @@
       "2000francs": "2000 francs = combien de dirhams ?",
       "90dh": "90 dirhams = combien de ryals ?",
       "3500centimes": "3500 centimes = combien de dirhams ?",
+      "1000dh": "1 000 dirhams = combien de centimes ?",
+      "5000dh": "5 000 dirhams = combien de centimes ?",
+      "10000dh": "10 000 dirhams = combien de centimes ?",
+      "50000dh": "50 000 dirhams = combien de centimes ?",
+      "100000dh": "100 000 dirhams = combien de centimes ?",
       "today": "aujourd'hui"
     }
   },
@@ -85,7 +131,12 @@
     "french": "Français",
     "offlineMode": "Mode hors ligne",
     "offlineModeDescription": "Utiliser l'app hors ligne pour les conversions marocaines uniquement",
-    "preferences": "Préférences",
+    "share": "Partager",
+    "shareApp": "Partager l'App",
+    "shareDescription": "Partager cette app avec vos amis et votre famille",
+    "shareTitle": "Convertisseur de Monnaie Marocaine",
+    "shareMessage": "Découvrez cette incroyable app de conversion de monnaie marocaine ! Parfaite pour les touristes et tous ceux qui s'intéressent à la monnaie marocaine. Téléchargez-la maintenant !",
+    "shareLink": "https://play.google.com/store/apps/details?id=com.moroccanmoneyconverter.app",
     "data": "Données",
     "appInfo": "Info de l'app",
     "clearCache": "Vider le cache",

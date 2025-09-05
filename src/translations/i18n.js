@@ -41,24 +41,28 @@ const languageDetector = {
   },
 };
 
-i18n
-  .use(languageDetector)
-  .use(initReactI18next)
-  .init({
-    compatibilityJSON: 'v3',
-    resources: {
-      ar: { translation: ar },
-      en: { translation: en },
-      fr: { translation: fr },
-    },
-    fallbackLng: 'en',
-    debug: __DEV__,
-    interpolation: {
-      escapeValue: false,
-    },
-    react: {
-      useSuspense: false, // This is important for React Native
-    },
-  });
+// Only initialize if not already initialized
+if (!i18n.isInitialized) {
+  i18n
+    .use(languageDetector)
+    .use(initReactI18next)
+    .init({
+      compatibilityJSON: 'v3',
+      resources: {
+        ar: { translation: ar },
+        en: { translation: en },
+        fr: { translation: fr },
+      },
+      fallbackLng: 'en',
+      debug: __DEV__,
+      returnObjects: true, // Enable accessing nested translation objects
+      interpolation: {
+        escapeValue: false,
+      },
+      react: {
+        useSuspense: false, // This is important for React Native
+      },
+    });
+}
 
 export default i18n;
