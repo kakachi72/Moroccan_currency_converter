@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from 'react-native';
+import { responsiveFontSize } from '../utils/responsive';
 
 import ConverterScreen from '../screens/ConverterScreen';
 import TouristScreen from '../screens/TouristScreen';
@@ -27,7 +28,7 @@ const GradientHeader = ({ title }) => (
   >
     <Text style={{
       color: 'white',
-      fontSize: 18,
+      fontSize: responsiveFontSize(18),
       fontWeight: 'bold',
       backgroundColor: 'transparent',
     }}>
@@ -62,6 +63,7 @@ export default function AppNavigator() {
           tabBarInactiveTintColor: 'gray',
           headerStyle: {
             backgroundColor: 'transparent',
+            height: 60, // Reduced header height
           },
           headerTintColor: '#fff',
           headerTitleStyle: {

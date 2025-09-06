@@ -24,6 +24,15 @@ import {
 } from '../utils/currencyUtils';
 import { fetchExchangeRates, convertWithRates } from '../services/currencyApi';
 import CurrencyBreakdown from '../components/CurrencyBreakdown';
+import { 
+  responsiveWidth, 
+  responsiveHeight, 
+  responsiveFontSize, 
+  getResponsivePadding,
+  getResponsiveMargin,
+  getResponsiveFontSizes,
+  getResponsiveDimensions
+} from '../utils/responsive';
 
 export default function ConverterScreen() {
   const { t } = useTranslation();
@@ -83,7 +92,10 @@ export default function ConverterScreen() {
   const handleConvert = () => {
     const numAmount = parseFloat(amount);
     if (!numAmount || numAmount <= 0) {
-      Alert.alert(t('common.error'), 'Please enter a valid amount');
+      // Focus the input field instead of showing alert
+      if (amountInputRef.current) {
+        amountInputRef.current.focus();
+      }
       return;
     }
 
@@ -132,29 +144,35 @@ export default function ConverterScreen() {
   const handleFromCurrencySelect = (currencyCode) => {
     setFromCurrency(currencyCode);
     setShowFromDropdown(false);
-    // Recalculate result if amount exists
-    if (amount) {
-      handleConvert();
-    }
+    // Don't automatically recalculate - user needs to click convert button
   };
 
   const handleToCurrencySelect = (currencyCode) => {
     setToCurrency(currencyCode);
     setShowToDropdown(false);
-    // Recalculate result if amount exists
-    if (amount) {
-      handleConvert();
-    }
+    // Don't automatically recalculate - user needs to click convert button
   };
 
   const formatNumber = (num) => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    // Convert to number first to handle any string issues
+    const numericValue = parseFloat(num);
+    if (isNaN(numericValue)) return '0';
+    
+    // Format with proper thousands separators
+    const formatted = numericValue.toLocaleString('en-US');
+    return formatted;
   };
 
   const formatInternationalNumber = (num) => {
     // Format with 2 decimal places for international currencies
-    const formatted = num.toFixed(2);
-    return formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    const numericValue = parseFloat(num);
+    if (isNaN(numericValue)) return '0.00';
+    
+    // Use toLocaleString for proper formatting
+    return numericValue.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
   };
 
   const parseFormattedNumber = (formattedStr) => {
@@ -172,16 +190,10 @@ export default function ConverterScreen() {
       cleanText = parts[0] + '.' + parts.slice(1).join('');
     }
     
-    const numericValue = parseFloat(cleanText) || 0;
     setAmount(cleanText); // Store the raw input for display
     
-    // Convert and update result
-    if (numericValue > 0) {
-      const converted = isInternationalMode 
-        ? convertWithRates(numericValue, fromCurrency, toCurrency, exchangeRates)
-        : convertMoroccanCurrency(numericValue, fromCurrency, toCurrency);
-      setResult(converted);
-    } else {
+    // Clear result if amount is empty
+    if (!cleanText || cleanText === '') {
       setResult(0);
     }
   };
@@ -369,7 +381,7 @@ export default function ConverterScreen() {
       {result > 0 && (
         <View style={styles.resultContainer}>
           <Text style={styles.resultLabel}>{t('converter.result')}</Text>
-          <Text style={styles.resultValue}>
+          <Text style={[styles.resultValue, { direction: 'ltr' }]}>
             {isInternationalMode ? formatInternationalNumber(result) : formatNumber(result)} {getCurrencySymbol(toCurrency)}
           </Text>
           
@@ -471,16 +483,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent', // Make transparent to show background image
-    padding: 20,
+    padding: getResponsivePadding(),
   },
   modeToggleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: getResponsiveMargin(),
     backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black
-    borderRadius: 12,
-    padding: 15,
+    borderRadius: responsiveWidth(12),
+    paddingVertical: responsiveHeight(8),
+    paddingHorizontal: getResponsivePadding(),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -490,10 +503,10 @@ const styles = StyleSheet.create({
     borderColor: '#000000', // Black border
   },
   modeLabel: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(16),
     fontWeight: 'bold',
     color: '#FFFFFF', // Pure white for maximum contrast
-    marginHorizontal: 10,
+    marginHorizontal: getResponsiveMargin(),
     textShadowColor: 'rgba(0,0,0,0.8)', // Strong black shadow
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 3,
@@ -513,37 +526,39 @@ const styles = StyleSheet.create({
   },
   amountDisplayContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: responsiveHeight(30),
   },
   amountDisplay: {
-    fontSize: 80,
+    fontSize: responsiveFontSize(80),
     fontWeight: 'bold',
     color: '#FFFFFF', // Pure white for the large amount number
     textAlign: 'center',
     backgroundColor: 'transparent',
     borderWidth: 0,
-    minWidth: 200,
+    minWidth: responsiveWidth(200),
     textShadowColor: 'rgba(0,0,0,0.8)', // Black shadow for contrast
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 3,
     writingDirection: 'ltr', // Force LTR for numbers
+    textAlignVertical: 'center', // Center text vertically
+    includeFontPadding: false, // Remove extra padding that might affect centering
   },
   currencyRowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30,
-    paddingHorizontal: 10,
+    marginBottom: responsiveHeight(30),
+    paddingHorizontal: getResponsivePadding(),
   },
   currencySelector: {
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: getResponsiveMargin(),
   },
   currencyLabel: {
-    fontSize: 16, // Increased font size for better visibility
+    fontSize: responsiveFontSize(16), // Increased font size for better visibility
     fontWeight: 'bold',
     color: '#FFFFFF', // Pure white for maximum contrast
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: responsiveHeight(8),
     textShadowColor: 'rgba(0,0,0,0.8)', // Strong black shadow
     textShadowOffset: { width: 2, height: 2 }, // Larger shadow offset
     textShadowRadius: 3, // More shadow blur for better visibility
@@ -670,6 +685,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 3, // More shadow blur
     textAlign: 'center',
     writingDirection: 'ltr', // Force LTR for numbers
+    direction: 'ltr', // Additional LTR enforcement
   },
   refreshButton: {
     backgroundColor: '#27AE60', // Moroccan green

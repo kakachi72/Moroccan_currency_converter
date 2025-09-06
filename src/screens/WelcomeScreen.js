@@ -11,6 +11,15 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { 
+  responsiveWidth, 
+  responsiveHeight, 
+  responsiveFontSize, 
+  getResponsivePadding,
+  getResponsiveMargin,
+  getResponsiveFontSizes,
+  getResponsiveDimensions
+} from '../utils/responsive';
 
 export default function WelcomeScreen({ onLanguageSelect }) {
   const { t, i18n } = useTranslation();
@@ -92,16 +101,16 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'space-between',
-    padding: 20,
+    padding: getResponsivePadding(),
   },
   header: {
     alignItems: 'center',
-    marginTop: 60,
+    marginTop: responsiveHeight(60),
   },
   logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
+    width: responsiveWidth(180),
+    height: responsiveHeight(180),
+    marginBottom: responsiveHeight(10),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -109,26 +118,26 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   title: {
-    fontSize: 32,
+    fontSize: responsiveFontSize(32),
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: responsiveHeight(10),
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: responsiveFontSize(18),
     color: '#e0e0e0',
     textAlign: 'center',
   },
   languageContainer: {
     flex: 1,
     justifyContent: 'center',
-    gap: 20,
+    gap: responsiveHeight(20),
   },
   languageButton: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: responsiveWidth(12),
+    padding: getResponsivePadding(),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center', // Center the content
@@ -139,20 +148,20 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   flag: {
-    fontSize: 32,
-    marginRight: 20,
+    fontSize: responsiveFontSize(32),
+    marginRight: responsiveWidth(20),
   },
   languageName: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(20),
     fontWeight: 'bold',
     color: '#2D5F3E',
   },
   footer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: responsiveHeight(10),
   },
   footerText: {
-    fontSize: 14,
+    fontSize: responsiveFontSize(14),
     color: '#fff',
     textAlign: 'center',
     fontWeight: 'bold',
