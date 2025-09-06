@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Moroccan Money Converter",
-    "slug": "moroccan-money-converter",
+    "name": "Sarf",
+    "slug": "sarf",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,14 +16,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.moroccanmoneyconverter.app"
+      "bundleIdentifier": "com.sarf.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#2D5F3E"
       },
-      "package": "com.moroccanmoneyconverter.app"
+      "package": "com.sarf.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"

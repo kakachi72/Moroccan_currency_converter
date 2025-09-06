@@ -86,7 +86,7 @@ export default function SettingsScreen() {
   const showAbout = () => {
     Alert.alert(
       t('settings.about'),
-      `${t('settings.aboutDescription')}\n\n${t('settings.version')}: ${Constants.expoConfig?.version || '1.0.0'}`,
+      `${t('settings.aboutDescription')}\n\n${t('settings.features')}\n\n${t('settings.developer')}\n\n${t('settings.version')}: ${Constants.expoConfig?.version || '1.0.0'}`,
       [{ text: t('common.ok') }]
     );
   };

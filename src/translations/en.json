@@ -6,7 +6,7 @@
     "settings": "Settings"
   },
   "converter": {
-    "title": "Moroccan Currency Converter",
+    "title": "Sarf",
     "amount": "Amount",
     "from": "From",
     "to": "To",
@@ -135,8 +135,8 @@
     "share": "Share",
     "shareApp": "Share the App",
     "shareDescription": "Share this app with friends and family",
-    "shareTitle": "Moroccan Currency Converter",
-    "shareMessage": "Check out this amazing Moroccan Currency Converter app! Perfect for tourists and anyone interested in Moroccan currency. Download it now!",
+    "shareTitle": "Sarf",
+    "shareMessage": "Check out this amazing Sarf app! Perfect for tourists and anyone interested in Moroccan currency. Download it now!",
     "shareLink": "https://play.google.com/store/apps/details?id=com.moroccanmoneyconverter.app",
     "data": "Data",
     "appInfo": "App Info",
@@ -144,7 +144,9 @@
     "clearCacheDescription": "Delete saved exchange rates and quiz scores",
     "cacheCleared": "Cache cleared successfully",
     "about": "About",
-    "aboutDescription": "Moroccan Currency Converter - Educational app for tourists and children",
+    "aboutDescription": "Sarf - Educational app for tourists and children",
+    "features": "Features:\n• Convert between Moroccan currencies (Dirham, Ryal, Franc, Centime)\n• International currency conversion with live rates\n• Interactive quiz with 25 questions\n• Currency history and educational content\n• Multi-language support (Arabic, English, French)",
+    "developer": "Developed with ❤️ for Morocco",
     "version": "Version",
     "madeWith": "Made with",
     "forMorocco": "for Morocco"
@@ -180,7 +182,7 @@
     "coin10c": "10 Centime Coin"
   },
   "welcome": {
-    "title": "Moroccan Currency Converter",
+    "title": "Sarf",
     "subtitle": "Choose your language",
     "selectLanguage": "Select Language",
     "getStarted": "Get Started"
