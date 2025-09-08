@@ -13,6 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import BannerAd from '../components/BannerAd';
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
@@ -191,6 +192,9 @@ export default function SettingsScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Banner Ad before "Made with" footer */}
+      <BannerAd placement="settings_banner" />
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>

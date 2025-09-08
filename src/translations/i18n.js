@@ -7,6 +7,7 @@ import ar from './ar.json';
 import en from './en.json';
 import fr from './fr.json';
 
+// Simple language detector that doesn't use the complex async pattern
 const languageDetector = {
   type: 'languageDetector',
   async: true,
@@ -15,20 +16,22 @@ const languageDetector = {
       // Check if we have a saved language preference
       const savedLanguage = await AsyncStorage.getItem('user-language');
       if (savedLanguage) {
-        return callback(savedLanguage);
+        callback(savedLanguage);
+        return;
       }
       
       // Default to device locale or fallback to English
       const deviceLanguage = Localization.locale || 'en';
       if (deviceLanguage.startsWith('ar') || deviceLanguage === 'ar-MA') {
-        return callback('ar');
+        callback('ar');
       } else if (deviceLanguage.startsWith('fr')) {
-        return callback('fr');
+        callback('fr');
+      } else {
+        callback('en'); // Default to English
       }
-      return callback('en'); // Default to English
     } catch (error) {
       console.log('Error reading language', error);
-      return callback('en');
+      callback('en');
     }
   },
   init: () => {},
@@ -41,28 +44,62 @@ const languageDetector = {
   },
 };
 
-// Only initialize if not already initialized
-if (!i18n.isInitialized) {
-  i18n
-    .use(languageDetector)
-    .use(initReactI18next)
-    .init({
-      compatibilityJSON: 'v3',
-      resources: {
-        ar: { translation: ar },
-        en: { translation: en },
-        fr: { translation: fr },
-      },
-      fallbackLng: 'en',
-      debug: __DEV__,
-      returnObjects: true, // Enable accessing nested translation objects
-      interpolation: {
-        escapeValue: false,
-      },
-      react: {
-        useSuspense: false, // This is important for React Native
-      },
-    });
-}
+// Initialize i18n with proper error handling
+const initI18n = async () => {
+  try {
+    if (!i18n.isInitialized) {
+      await i18n
+        .use(languageDetector)
+        .use(initReactI18next)
+        .init({
+          compatibilityJSON: 'v3',
+          resources: {
+            ar: { translation: ar },
+            en: { translation: en },
+            fr: { translation: fr },
+          },
+          fallbackLng: 'en',
+          debug: __DEV__,
+          returnObjects: true,
+          interpolation: {
+            escapeValue: false,
+          },
+          react: {
+            useSuspense: false,
+          },
+        });
+    }
+  } catch (error) {
+    console.error('Error initializing i18n:', error);
+    // Fallback initialization without language detector
+    try {
+      i18n.init({
+        compatibilityJSON: 'v3',
+        resources: {
+          ar: { translation: ar },
+          en: { translation: en },
+          fr: { translation: fr },
+        },
+        fallbackLng: 'en',
+        lng: 'en',
+        debug: __DEV__,
+        returnObjects: true,
+        interpolation: {
+          escapeValue: false,
+        },
+        react: {
+          useSuspense: false,
+        },
+      });
+    } catch (fallbackError) {
+      console.error('Fallback i18n initialization failed:', fallbackError);
+    }
+  }
+};
+
+// Initialize immediately but don't block the export
+initI18n().catch(error => {
+  console.error('Failed to initialize i18n:', error);
+});
 
 export default i18n;

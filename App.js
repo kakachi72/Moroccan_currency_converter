@@ -19,6 +19,20 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
+        // Wait for i18n to be ready
+        if (!i18n.isInitialized) {
+          await new Promise((resolve) => {
+            const checkInitialized = () => {
+              if (i18n.isInitialized) {
+                resolve();
+              } else {
+                setTimeout(checkInitialized, 100);
+              }
+            };
+            checkInitialized();
+          });
+        }
+        
         // FOR TESTING: Clear saved language to force welcome screen
         await AsyncStorage.removeItem('user-language');
         

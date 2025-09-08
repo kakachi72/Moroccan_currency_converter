@@ -31,7 +31,11 @@ import {
   getResponsivePadding,
   getResponsiveMargin,
   getResponsiveFontSizes,
-  getResponsiveDimensions
+  getResponsiveDimensions,
+  isSmallScreen,
+  isMediumScreen,
+  isLargeScreen,
+  isTablet
 } from '../utils/responsive';
 
 export default function ConverterScreen() {
@@ -287,7 +291,10 @@ export default function ConverterScreen() {
       style={styles.backgroundImage}
       resizeMode="cover"
     >
-      <ScrollView style={styles.container}>
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Mode Toggle */}
         <View style={styles.modeToggleContainer}>
         <Text style={styles.modeLabel}>{t('converter.national')}</Text>
@@ -338,9 +345,28 @@ export default function ConverterScreen() {
             onPress={() => setShowFromDropdown(true)}
           >
             <Text style={styles.pickerText}>
-              {Platform.OS === 'ios' ? '' : getCurrencyIcon(fromCurrency)} {getCurrencyDisplayName(fromCurrency)}
+              {isInternationalMode 
+                ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(fromCurrency)} ${fromCurrency}`
+                : getCurrencyDisplayName(fromCurrency)
+              }
             </Text>
             <Text style={styles.dropdownArrow}>▼</Text>
+          </TouchableOpacity>
+        </View>
+        {/* Switch button between dropdowns */}
+        <View style={styles.switchButtonContainer}>
+          <TouchableOpacity
+            accessibilityLabel="Swap currencies"
+            onPress={() => {
+              const prevFrom = fromCurrency;
+              setFromCurrency(toCurrency);
+              setToCurrency(prevFrom);
+              // Reset result after swap
+              setResult(0);
+            }}
+            style={styles.switchButton}
+          >
+            <Text style={styles.switchIcon}>⇄</Text>
           </TouchableOpacity>
         </View>
 
@@ -351,7 +377,10 @@ export default function ConverterScreen() {
             onPress={() => setShowToDropdown(true)}
           >
             <Text style={styles.pickerText}>
-              {Platform.OS === 'ios' ? '' : getCurrencyIcon(toCurrency)} {getCurrencyDisplayName(toCurrency)}
+              {isInternationalMode 
+                ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(toCurrency)} ${toCurrency}`
+                : getCurrencyDisplayName(toCurrency)
+              }
             </Text>
             <Text style={styles.dropdownArrow}>▼</Text>
           </TouchableOpacity>
@@ -428,7 +457,10 @@ export default function ConverterScreen() {
                   onPress={() => handleFromCurrencySelect(item.code)}
                 >
                   <Text style={styles.currencyOptionText}>
-                    {Platform.OS === 'ios' ? '' : getCurrencyIcon(item.code)} {getCurrencyDisplayName(item.code)}
+                    {isInternationalMode 
+                      ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(item.code)} ${item.code}`
+                      : getCurrencyDisplayName(item.code)
+                    }
                   </Text>
                 </TouchableOpacity>
               )}
@@ -463,7 +495,10 @@ export default function ConverterScreen() {
                   onPress={() => handleToCurrencySelect(item.code)}
                 >
                   <Text style={styles.currencyOptionText}>
-                    {Platform.OS === 'ios' ? '' : getCurrencyIcon(item.code)} {getCurrencyDisplayName(item.code)}
+                    {isInternationalMode 
+                      ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(item.code)} ${item.code}`
+                      : getCurrencyDisplayName(item.code)
+                    }
                   </Text>
                 </TouchableOpacity>
               )}
@@ -477,6 +512,9 @@ export default function ConverterScreen() {
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    paddingBottom: responsiveHeight(60),
+  },
   backgroundImage: {
     flex: 1,
   },
@@ -489,10 +527,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: getResponsiveMargin(),
+    marginBottom: responsiveHeight(10),
     backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black
     borderRadius: responsiveWidth(12),
-    paddingVertical: responsiveHeight(8),
+    paddingVertical: responsiveHeight(6),
     paddingHorizontal: getResponsivePadding(),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -513,7 +551,7 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: responsiveHeight(10),
   },
   statusText: {
     fontSize: 16,
@@ -526,10 +564,10 @@ const styles = StyleSheet.create({
   },
   amountDisplayContainer: {
     alignItems: 'center',
-    marginBottom: responsiveHeight(30),
+    marginBottom: responsiveHeight(15),
   },
   amountDisplay: {
-    fontSize: responsiveFontSize(80),
+    fontSize: responsiveFontSize(60),
     fontWeight: 'bold',
     color: '#FFFFFF', // Pure white for the large amount number
     textAlign: 'center',
@@ -546,7 +584,7 @@ const styles = StyleSheet.create({
   currencyRowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: responsiveHeight(30),
+    marginBottom: responsiveHeight(15),
     paddingHorizontal: getResponsivePadding(),
   },
   currencySelector: {
@@ -554,11 +592,12 @@ const styles = StyleSheet.create({
     marginHorizontal: getResponsiveMargin(),
   },
   currencyLabel: {
-    fontSize: responsiveFontSize(16), // Increased font size for better visibility
+    fontSize: isSmallScreen() ? responsiveFontSize(12) : 
+              isTablet() ? responsiveFontSize(16) : responsiveFontSize(14),
     fontWeight: 'bold',
     color: '#FFFFFF', // Pure white for maximum contrast
     textAlign: 'center',
-    marginBottom: responsiveHeight(8),
+    marginBottom: isSmallScreen() ? responsiveHeight(3) : responsiveHeight(5),
     textShadowColor: 'rgba(0,0,0,0.8)', // Strong black shadow
     textShadowOffset: { width: 2, height: 2 }, // Larger shadow offset
     textShadowRadius: 3, // More shadow blur for better visibility
@@ -566,7 +605,7 @@ const styles = StyleSheet.create({
   },
   pickerWrapper: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 25,
+    borderRadius: isSmallScreen() ? responsiveWidth(20) : responsiveWidth(25),
     borderWidth: 2,
     borderColor: '#E0E0E0',
     shadowColor: '#000',
@@ -574,22 +613,52 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 5,
-    minHeight: 56,
+    minHeight: isSmallScreen() ? responsiveHeight(40) : 
+               isTablet() ? responsiveHeight(55) : responsiveHeight(48),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 15,
+    paddingHorizontal: isSmallScreen() ? responsiveWidth(12) : 
+                       isTablet() ? responsiveWidth(20) : responsiveWidth(15),
   },
   pickerText: {
-    fontSize: 16,
+    fontSize: isSmallScreen() ? responsiveFontSize(14) : 
+              isTablet() ? responsiveFontSize(18) : responsiveFontSize(16),
     fontWeight: '600',
     color: '#000000',
     flex: 1,
   },
   dropdownArrow: {
-    fontSize: 12,
+    fontSize: isSmallScreen() ? responsiveFontSize(10) : 
+              isTablet() ? responsiveFontSize(14) : responsiveFontSize(12),
     color: '#666',
-    marginLeft: 10,
+    marginLeft: isSmallScreen() ? responsiveWidth(8) : responsiveWidth(10),
+  },
+  switchButtonContainer: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: isSmallScreen() ? responsiveHeight(4) : responsiveHeight(6),
+  },
+  switchButton: {
+    width: responsiveWidth(34),
+    height: responsiveWidth(34),
+    borderRadius: responsiveWidth(17),
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: responsiveWidth(6),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 6,
+    borderWidth: 2,
+    borderColor: '#1b3a25',
+  },
+  switchIcon: {
+    color: '#27AE60',
+    fontSize: responsiveFontSize(14),
+    fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,
@@ -599,11 +668,13 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 20,
-    margin: 20,
-    maxHeight: '70%',
-    minWidth: '80%',
+    borderRadius: isSmallScreen() ? responsiveWidth(12) : responsiveWidth(15),
+    padding: isSmallScreen() ? responsiveHeight(15) : 
+             isTablet() ? responsiveHeight(25) : responsiveHeight(20),
+    margin: isSmallScreen() ? responsiveHeight(15) : responsiveHeight(20),
+    maxHeight: isSmallScreen() ? '60%' : '70%',
+    minWidth: isSmallScreen() ? '90%' : '80%',
+    maxWidth: isTablet() ? responsiveWidth(500) : '90%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
@@ -611,15 +682,18 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: isSmallScreen() ? responsiveFontSize(16) : 
+              isTablet() ? responsiveFontSize(20) : responsiveFontSize(18),
     fontWeight: 'bold',
     color: '#2D5F3E',
-    marginBottom: 15,
+    marginBottom: isSmallScreen() ? responsiveHeight(12) : responsiveHeight(15),
     textAlign: 'center',
   },
   currencyOption: {
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+    paddingVertical: isSmallScreen() ? responsiveHeight(12) : 
+                     isTablet() ? responsiveHeight(18) : responsiveHeight(15),
+    paddingHorizontal: isSmallScreen() ? responsiveWidth(8) : 
+                       isTablet() ? responsiveWidth(15) : responsiveWidth(10),
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
   },
@@ -627,11 +701,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8F5E8',
   },
   currencyOptionText: {
-    fontSize: 16,
+    fontSize: isSmallScreen() ? responsiveFontSize(14) : 
+              isTablet() ? responsiveFontSize(18) : responsiveFontSize(16),
     color: '#333',
   },
   convertButtonContainer: {
-    marginBottom: 20,
+    marginBottom: responsiveHeight(15),
     borderRadius: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -641,7 +716,7 @@ const styles = StyleSheet.create({
   },
   convertButton: {
     borderRadius: 15,
-    padding: 18,
+    padding: responsiveHeight(15),
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#004d28',
@@ -654,8 +729,8 @@ const styles = StyleSheet.create({
   resultContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.8)', // Semi-transparent black
     borderRadius: 15,
-    padding: 20,
-    marginBottom: 20,
+    padding: responsiveHeight(15),
+    marginBottom: responsiveHeight(15),
     alignItems: 'center',
     borderWidth: 2,
     borderColor: '#F39C12', // Gold border
@@ -666,9 +741,9 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   resultLabel: {
-    fontSize: 18, // Increased from 16 to 18
+    fontSize: responsiveFontSize(16), // Reduced to save space
     color: '#FFFFFF', // Pure white for better visibility
-    marginBottom: 12, // Increased margin
+    marginBottom: responsiveHeight(8), // Reduced margin
     textShadowColor: 'rgba(0,0,0,0.8)', // Stronger shadow
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
@@ -676,10 +751,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   resultValue: {
-    fontSize: 36, // Increased from 28 to 36 for better visibility
+    fontSize: responsiveFontSize(28), // Reduced to save space
     fontWeight: 'bold',
     color: '#FFD700', // Bright gold for better visibility
-    marginBottom: 16,
+    marginBottom: responsiveHeight(10), // Reduced margin
     textShadowColor: 'rgba(0,0,0,0.8)', // Stronger shadow
     textShadowOffset: { width: 2, height: 2 }, // Larger shadow offset
     textShadowRadius: 3, // More shadow blur
@@ -690,7 +765,7 @@ const styles = StyleSheet.create({
   refreshButton: {
     backgroundColor: '#27AE60', // Moroccan green
     borderRadius: 12,
-    padding: 15,
+    padding: responsiveHeight(12),
     alignItems: 'center',
     borderWidth: 2,
     borderColor: '#2ECC71',

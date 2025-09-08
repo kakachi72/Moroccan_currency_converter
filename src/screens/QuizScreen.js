@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,17 +8,36 @@ import {
   Alert,
   ImageBackground,
   Image,
+  Share,
 } from 'react-native';
+// Optional captureRef (not available in Expo Go without dev client)
+let captureRef;
+try {
+  captureRef = require('react-native-view-shot').captureRef;
+} catch (e) {
+  captureRef = null;
+}
+// Optional expo-sharing (not available in plain RN without Expo modules)
+let Sharing;
+try {
+  Sharing = require('expo-sharing');
+} catch (e) {
+  Sharing = null;
+}
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertMoroccanCurrency } from '../utils/currencyUtils';
+import { useInterstitialAd } from '../components/InterstitialAd';
+import BannerAd from '../components/BannerAd';
 
 const QUIZ_STORAGE_KEY = 'quiz_scores';
 const QUESTIONS_PER_GAME = 25;
 const QUESTIONS_PER_STAGE = 5;
 
 export default function QuizScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isArabic = !!(i18n && typeof i18n.language === 'string' && i18n.language.startsWith('ar'));
+  const { showInterstitialAd, preloadInterstitialAd } = useInterstitialAd();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -34,9 +53,12 @@ export default function QuizScreen() {
   const [fadeAnim] = useState(new Animated.Value(1));
   const [stageBreak, setStageBreak] = useState(false);
   const [stageScore, setStageScore] = useState(0);
+  const screenRef = useRef(null);
 
   useEffect(() => {
     loadBestScore();
+    // Preload interstitial ad for better performance
+    preloadInterstitialAd();
   }, []);
 
   const loadBestScore = async () => {
@@ -63,6 +85,17 @@ export default function QuizScreen() {
 
   const generateQuestions = () => {
     const questionPool = [];
+
+    const shuffleOptions = (options, correct) => {
+      const unique = Array.from(new Set(options.concat([correct])));
+      for (let i = unique.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = unique[i];
+        unique[i] = unique[j];
+        unique[j] = tmp;
+      }
+      return unique;
+    };
 
     // Stage 1: Basic conversions (Questions 1-5)
     const stage1Questions = [
@@ -221,7 +254,7 @@ export default function QuizScreen() {
     ];
 
     // Stage 5: Big numbers - Dirham to Centime (Questions 21-25)
-    const stage5Questions = [
+    let stage5Questions = [
       {
         stage: 5,
         question: t('quiz.questions.1000dh'),
@@ -258,6 +291,12 @@ export default function QuizScreen() {
         unit: 'centimes'
       },
     ];
+
+    // Randomize options for Stage 5 so the correct answer isn't always in the same position
+    stage5Questions = stage5Questions.map(q => ({
+      ...q,
+      options: shuffleOptions(q.options, q.answer),
+    }));
 
     questionPool.push(...stage1Questions, ...stage2Questions, ...stage3Questions, ...stage4Questions, ...stage5Questions);
     return questionPool;
@@ -349,6 +388,11 @@ export default function QuizScreen() {
     setGameEnded(true);
     setGameStarted(false);
     saveBestScore(correctAnswers);
+    
+    // Show interstitial ad after quiz completion
+    setTimeout(() => {
+      showInterstitialAd();
+    }, 1000); // Small delay to ensure UI is ready
   };
 
   const resetGame = () => {
@@ -362,6 +406,34 @@ export default function QuizScreen() {
     setShowResult(false);
     setStageBreak(false);
     setStageScore(0);
+  };
+
+  const shareResult = async () => {
+    try {
+      const appUrl = 'https://play.google.com/store/apps/details?id=com.dirhamy.app';
+      const shareMessage = `I scored ${correctAnswers}/${QUESTIONS_PER_GAME} in Dirhamy! ${score} DH total. Try the app: ${appUrl}`;
+
+      if (captureRef && screenRef.current) {
+        const uri = await captureRef(screenRef.current, { format: 'png', quality: 0.9 });
+
+        // Try native Share with both message and image URL first
+        try {
+          await Share.share({ message: shareMessage, url: uri, title: t('quiz.title') });
+          return;
+        } catch (err) {
+          // If Share fails for file URLs, try expo-sharing when available
+          if (Sharing && (await Sharing.isAvailableAsync())) {
+            await Sharing.shareAsync(uri, { dialogTitle: t('quiz.title'), mimeType: 'image/png' });
+            return;
+          }
+        }
+      }
+
+      // Text-only fallback (no screenshot available)
+      await Share.share({ message: shareMessage, title: t('quiz.title') });
+    } catch (error) {
+      console.log('Error sharing result:', error);
+    }
   };
 
   const getBanknoteImage = (value) => {
@@ -420,6 +492,7 @@ export default function QuizScreen() {
               <Text style={styles.startButtonText}>{t('quiz.start')}</Text>
             </TouchableOpacity>
           </View>
+          <BannerAd placement="quiz_welcome_bottom" />
         </View>
       </ImageBackground>
     );
@@ -456,6 +529,7 @@ export default function QuizScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+        <BannerAd placement="quiz_stage_break_bottom" />
       </ImageBackground>
     );
   }
@@ -467,7 +541,7 @@ export default function QuizScreen() {
         style={styles.backgroundImage}
         resizeMode="cover"
       >
-        <View style={styles.container}>
+        <View ref={screenRef} style={styles.container}>
           <View style={styles.gameOverContainer}>
             <Text style={styles.gameOverTitle}>{t('quiz.gameOver')}</Text>
             <View style={styles.finalScoreContainer}>
@@ -494,11 +568,15 @@ export default function QuizScreen() {
             )}
 
             <View style={styles.gameOverActions}>
+              <TouchableOpacity style={styles.shareButton} onPress={shareResult}>
+                <Text style={styles.shareButtonText}>🔗 {t('settings.share')}</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={styles.playAgainButton} onPress={startGame}>
                 <Text style={styles.playAgainButtonText}>{t('quiz.playAgain')}</Text>
               </TouchableOpacity>
             </View>
           </View>
+          <BannerAd placement="quiz_gameover_bottom" />
         </View>
       </ImageBackground>
     );
@@ -554,7 +632,9 @@ export default function QuizScreen() {
         )}
 
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>{question.question}</Text>
+          <Text style={[styles.questionText, (isArabic && question.stage === 5) && styles.ltrNumber]}>
+            {question.question}
+          </Text>
         </View>
 
         <View style={styles.optionsContainer}>
@@ -570,17 +650,18 @@ export default function QuizScreen() {
               onPress={() => selectAnswer(option)}
               disabled={selectedAnswer !== null}
             >
-              <Text style={[
+              <Text style={[ 
                 styles.optionText,
                 selectedAnswer === option && styles.selectedOptionText,
                 selectedAnswer !== null && option === question.answer && styles.correctOptionText,
+                (isArabic && question.stage === 5) && styles.ltrNumber,
               ]}>
                 {formatNumber(option)} {question.unit}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
-
+        <BannerAd placement="quiz_in_game_bottom" />
       </Animated.View>
     </ImageBackground>
   );
@@ -747,6 +828,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     writingDirection: 'ltr', // Force LTR for numbers
   },
+  ltrNumber: {
+    writingDirection: 'ltr',
+    textAlign: 'center',
+  },
   selectedOptionText: {
     fontWeight: 'bold',
   },
@@ -834,6 +919,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  shareButton: {
+    backgroundColor: '#ffffff',
+    borderColor: '#2D5F3E',
+    borderWidth: 2,
+    borderRadius: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginRight: 10,
+  },
+  shareButtonText: {
+    color: '#2D5F3E',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   playAgainButton: {
     backgroundColor: '#2D5F3E',
     borderRadius: 8,
@@ -843,6 +942,22 @@ const styles = StyleSheet.create({
   playAgainButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  shareIconButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 18,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderWidth: 2,
+    borderColor: '#2D5F3E',
+  },
+  shareIconText: {
+    fontSize: 16,
+    color: '#2D5F3E',
     fontWeight: 'bold',
   },
   // Stage break styles

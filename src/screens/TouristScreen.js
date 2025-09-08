@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from '../translations/i18n';
 import { fetchExchangeRates, convertWithRates } from '../services/currencyApi';
 import { DENOMINATIONS } from '../utils/currencyUtils';
+import BannerAd from '../components/BannerAd';
 
 export default function TouristScreen() {
   const { t } = useTranslation();
@@ -259,6 +260,9 @@ export default function TouristScreen() {
         </View>
       )}
 
+      {/* Banner Ad before Tips */}
+      <BannerAd placement="tourist_banner" />
+
       <View style={styles.conversionTip}>
         <Text style={styles.tipTitle}>💡 {t('common.tip')}</Text>
         <Text style={styles.tipText}>
@@ -322,6 +326,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+  },
+  adSpaceContainer: {
+    marginVertical: 20,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 12,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  squareAdContainer: {
+    width: '48%',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    minHeight: 120,
   },
   denominationCard: {
     width: '48%',

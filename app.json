@@ -1,10 +1,12 @@
 {
   "expo": {
-    "name": "Sarf",
-    "slug": "sarf",
+    "name": "Dirhamy",
+    "slug": "dirhamy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+
+    "scheme": "dirhamy",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -16,22 +18,35 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sarf.app"
+      "bundleIdentifier": "com.dirhamy.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#2D5F3E"
       },
-      "package": "com.sarf.app"
+      "package": "com.dirhamy.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "your-project-id-here"
+        "projectId": "1fcc4ffa-7ed7-463b-b40c-5c16ef7def4e"
+      },
+      "react-native-google-mobile-ads": {
+        "android_app_id": "ca-app-pub-5705725180630568~6839355333",
+        "ios_app_id": "ca-app-pub-5705725180630568~6839355333"
       }
-    }
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-5705725180630568~6839355333",
+          "iosAppId": "ca-app-pub-5705725180630568~6839355333"
+        }
+      ]
+    ]
   }
 }

@@ -6,7 +6,7 @@
     "settings": "Paramètres"
   },
   "converter": {
-    "title": "Sarf",
+    "title": "Dirhamy",
     "amount": "Montant",
     "from": "De",
     "to": "Vers",
@@ -134,7 +134,7 @@
     "share": "Partager",
     "shareApp": "Partager l'App",
     "shareDescription": "Partager cette app avec vos amis et votre famille",
-    "shareTitle": "Sarf",
+    "shareTitle": "Dirhamy",
     "shareMessage": "Découvrez cette incroyable app de conversion de monnaie marocaine ! Parfaite pour les touristes et tous ceux qui s'intéressent à la monnaie marocaine. Téléchargez-la maintenant !",
     "shareLink": "https://play.google.com/store/apps/details?id=com.moroccanmoneyconverter.app",
     "data": "Données",
@@ -143,7 +143,7 @@
     "clearCacheDescription": "Supprimer les taux de change et scores de quiz sauvegardés",
     "cacheCleared": "Cache vidé avec succès",
     "about": "À propos",
-    "aboutDescription": "Sarf - App éducative pour touristes et enfants",
+    "aboutDescription": "Dirhamy - App éducative pour touristes et enfants",
     "features": "Fonctionnalités :\n• Convertir entre les devises marocaines (Dirham, Ryal, Franc, Centime)\n• Conversion de devises internationales avec taux en temps réel\n• Quiz interactif avec 25 questions\n• Historique des devises et contenu éducatif\n• Support multilingue (Arabe, Anglais, Français)",
     "developer": "Développé avec ❤️ pour le Maroc",
     "version": "Version",
@@ -181,7 +181,7 @@
     "coin10c": "Pièce 10 centimes"
   },
   "welcome": {
-    "title": "Sarf",
+    "title": "Dirhamy",
     "subtitle": "Choisissez votre langue",
     "selectLanguage": "Sélectionner la langue",
     "getStarted": "Commencer"

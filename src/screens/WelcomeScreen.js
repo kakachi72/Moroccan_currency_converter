@@ -22,7 +22,7 @@ import {
 } from '../utils/responsive';
 
 export default function WelcomeScreen({ onLanguageSelect }) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n, ready } = useTranslation();
 
   const handleLanguageSelect = async (language) => {
     try {
@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: responsiveHeight(60),
+    marginTop: responsiveHeight(30),
   },
   logo: {
-    width: responsiveWidth(180),
-    height: responsiveHeight(180),
-    marginBottom: responsiveHeight(10),
+    width: responsiveWidth(250),
+    height: responsiveHeight(250),
+    marginBottom: responsiveHeight(15),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -131,13 +131,15 @@ const styles = StyleSheet.create({
   },
   languageContainer: {
     flex: 1,
-    justifyContent: 'center',
-    gap: responsiveHeight(20),
+    justifyContent: 'flex-start',
+    marginTop: responsiveHeight(20),
+    gap: responsiveHeight(12),
   },
   languageButton: {
     backgroundColor: '#fff',
     borderRadius: responsiveWidth(12),
-    padding: getResponsivePadding(),
+    paddingVertical: responsiveHeight(12),
+    paddingHorizontal: responsiveWidth(20),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center', // Center the content
@@ -148,17 +150,17 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   flag: {
-    fontSize: responsiveFontSize(32),
-    marginRight: responsiveWidth(20),
+    fontSize: responsiveFontSize(24),
+    marginRight: responsiveWidth(15),
   },
   languageName: {
-    fontSize: responsiveFontSize(20),
+    fontSize: responsiveFontSize(16),
     fontWeight: 'bold',
     color: '#2D5F3E',
   },
   footer: {
     alignItems: 'center',
-    marginBottom: responsiveHeight(10),
+    marginBottom: responsiveHeight(5),
   },
   footerText: {
     fontSize: responsiveFontSize(14),
