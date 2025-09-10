@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Switch,
   Alert,
   ImageBackground,
   Share,
@@ -17,7 +16,6 @@ import BannerAd from '../components/BannerAd';
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
-  const [offlineMode, setOfflineMode] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
 
   useEffect(() => {
@@ -25,14 +23,7 @@ export default function SettingsScreen() {
   }, []);
 
   const loadSettings = async () => {
-    try {
-      const savedOfflineMode = await AsyncStorage.getItem('offline-mode');
-      if (savedOfflineMode !== null) {
-        setOfflineMode(JSON.parse(savedOfflineMode));
-      }
-    } catch (error) {
-      console.log('Failed to load settings:', error);
-    }
+    // Settings loading logic can be added here if needed
   };
 
   const changeLanguage = async (language) => {
@@ -41,19 +32,11 @@ export default function SettingsScreen() {
       setCurrentLanguage(language);
       // The language detector will automatically save to AsyncStorage
     } catch (error) {
-      console.log('Failed to change language:', error);
+      console.error('Failed to change language:', error);
       Alert.alert(t('common.error'), 'Failed to change language');
     }
   };
 
-  const toggleOfflineMode = async (value) => {
-    try {
-      setOfflineMode(value);
-      await AsyncStorage.setItem('offline-mode', JSON.stringify(value));
-    } catch (error) {
-      console.log('Failed to save offline mode setting:', error);
-    }
-  };
 
   const clearCache = async () => {
     Alert.alert(
@@ -75,7 +58,7 @@ export default function SettingsScreen() {
               ]);
               Alert.alert(t('common.ok'), t('settings.cacheCleared'));
             } catch (error) {
-              console.log('Failed to clear cache:', error);
+              console.error('Failed to clear cache:', error);
               Alert.alert(t('common.error'), 'Failed to clear cache');
             }
           },
@@ -100,7 +83,7 @@ export default function SettingsScreen() {
         url: t('settings.shareLink'),
       });
     } catch (error) {
-      console.log('Error sharing app:', error);
+      console.error('Error sharing app:', error);
       Alert.alert(t('common.error'), 'Failed to share app');
     }
   };
@@ -252,27 +235,6 @@ const styles = StyleSheet.create({
   activeLanguageButtonText: {
     color: '#2D5F3E',
     fontWeight: 'bold',
-  },
-  settingItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  settingInfo: {
-    flex: 1,
-    marginRight: 16,
-  },
-  settingLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
-    marginBottom: 4,
-  },
-  settingDescription: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 18,
   },
   actionButton: {
     paddingVertical: 12,

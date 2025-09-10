@@ -30,11 +30,7 @@ import {
   responsiveFontSize, 
   getResponsivePadding,
   getResponsiveMargin,
-  getResponsiveFontSizes,
-  getResponsiveDimensions,
   isSmallScreen,
-  isMediumScreen,
-  isLargeScreen,
   isTablet
 } from '../utils/responsive';
 
@@ -86,7 +82,7 @@ export default function ConverterScreen() {
       setIsOnline(ratesData.source !== 'fallback');
       setLastUpdate(ratesData.timestamp);
     } catch (error) {
-      console.log('Failed to load exchange rates:', error);
+      console.error('Failed to load exchange rates:', error);
       setIsOnline(false);
     } finally {
       setIsLoading(false);

@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { I18nManager } from 'react-native';
 
 import ar from './ar.json';
 import en from './en.json';
@@ -30,7 +31,7 @@ const languageDetector = {
         callback('en'); // Default to English
       }
     } catch (error) {
-      console.log('Error reading language', error);
+      console.error('Error reading language', error);
       callback('en');
     }
   },
@@ -38,8 +39,10 @@ const languageDetector = {
   cacheUserLanguage: async (language) => {
     try {
       await AsyncStorage.setItem('user-language', language);
+      // Force LTR layout for all languages (Arabic, French, English)
+      I18nManager.forceRTL(false);
     } catch (error) {
-      console.log('Error saving language', error);
+      console.error('Error saving language', error);
     }
   },
 };

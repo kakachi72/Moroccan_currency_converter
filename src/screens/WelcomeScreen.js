@@ -16,18 +16,17 @@ import {
   responsiveHeight, 
   responsiveFontSize, 
   getResponsivePadding,
-  getResponsiveMargin,
-  getResponsiveFontSizes,
-  getResponsiveDimensions
+  getResponsiveMargin
 } from '../utils/responsive';
+// RTL utilities removed - all languages now use LTR layout
 
 export default function WelcomeScreen({ onLanguageSelect }) {
-  const { t, i18n, ready } = useTranslation();
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language || 'en';
+  // All languages now use LTR layout
 
   const handleLanguageSelect = async (language) => {
     try {
-      console.log('Selecting language:', language); // Debug log
-      
       // Save language preference
       await AsyncStorage.setItem('user-language', language);
       
@@ -37,7 +36,7 @@ export default function WelcomeScreen({ onLanguageSelect }) {
       // Notify parent component
       onLanguageSelect(language);
     } catch (error) {
-      console.log('Error setting language:', error);
+      console.error('Error setting language:', error);
     }
   };
 
@@ -117,18 +116,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
-  title: {
-    fontSize: responsiveFontSize(32),
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: responsiveHeight(10),
-  },
-  subtitle: {
-    fontSize: responsiveFontSize(18),
-    color: '#e0e0e0',
-    textAlign: 'center',
-  },
   languageContainer: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -160,7 +147,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    marginBottom: responsiveHeight(5),
+    marginBottom: responsiveHeight(40),
   },
   footerText: {
     fontSize: responsiveFontSize(14),

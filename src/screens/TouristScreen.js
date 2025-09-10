@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import i18n from '../translations/i18n';
-import { fetchExchangeRates, convertWithRates } from '../services/currencyApi';
+import { fetchExchangeRates } from '../services/currencyApi';
 import { DENOMINATIONS } from '../utils/currencyUtils';
 import BannerAd from '../components/BannerAd';
 
@@ -19,8 +19,7 @@ export default function TouristScreen() {
   const [exchangeRates, setExchangeRates] = useState(null);
   const [selectedTab, setSelectedTab] = useState('bills');
 
-  // Check if current language is Arabic for RTL support
-  const isArabic = i18n.language === 'ar';
+  // All languages now use LTR layout
 
   useEffect(() => {
     loadExchangeRates();
@@ -31,7 +30,7 @@ export default function TouristScreen() {
       const ratesData = await fetchExchangeRates();
       setExchangeRates(ratesData.rates);
     } catch (error) {
-      console.log('Failed to load exchange rates:', error);
+      console.error('Failed to load exchange rates:', error);
     }
   };
 
@@ -89,10 +88,6 @@ export default function TouristScreen() {
     }
   ];
 
-  const convertToInternational = (amountInDH, currency) => {
-    if (!exchangeRates) return null;
-    return convertWithRates(amountInDH, 'MAD', currency, exchangeRates);
-  };
 
   const getBillImage = (value) => {
     switch (value) {
@@ -169,19 +164,19 @@ export default function TouristScreen() {
     <View style={styles.historyList}>
       {getCurrencyHistory().map((currency, index) => (
         <View key={currency.currency} style={styles.historyCard}>
-          <View style={[styles.historyHeader, isArabic && styles.historyHeaderRTL]}>
-            <Text style={[styles.historyIcon, isArabic && styles.historyIconRTL]}>{currency.icon}</Text>
-            <View style={[styles.historyTitleContainer, isArabic && styles.historyTitleContainerRTL]}>
-              <Text style={[styles.historyTitle, isArabic && styles.historyTitleRTL]}>{currency.title}</Text>
-              <Text style={[styles.historyPeriod, isArabic && styles.historyPeriodRTL]}>{currency.period}</Text>
+          <View style={styles.historyHeader}>
+            <Text style={styles.historyIcon}>{currency.icon}</Text>
+            <View style={styles.historyTitleContainer}>
+              <Text style={styles.historyTitle}>{currency.title}</Text>
+              <Text style={styles.historyPeriod}>{currency.period}</Text>
             </View>
           </View>
-          <Text style={[styles.historyDescription, isArabic && styles.historyDescriptionRTL]}>{currency.description}</Text>
+          <Text style={styles.historyDescription}>{currency.description}</Text>
           <View style={styles.historyFacts}>
             {currency.facts.map((fact, factIndex) => (
-              <View key={factIndex} style={[styles.factItem, isArabic && styles.factItemRTL]}>
+              <View key={factIndex} style={styles.factItem}>
                 <Text style={styles.factBullet}>•</Text>
-                <Text style={[styles.factText, isArabic && styles.factTextRTL]}>{fact}</Text>
+                <Text style={styles.factText}>{fact}</Text>
               </View>
             ))}
           </View>
@@ -327,33 +322,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  adSpaceContainer: {
-    marginVertical: 20,
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 12,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  squareAdContainer: {
-    width: '48%',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    minHeight: 120,
-  },
   denominationCard: {
     width: '48%',
     backgroundColor: '#fff',
@@ -411,53 +379,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     textAlign: 'center',
-  },
-  pricesContainer: {
-    marginTop: 10,
-  },
-  priceCard: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  priceHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  priceIcon: {
-    fontSize: 24,
-    marginRight: 12,
-  },
-  priceTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    flex: 1,
-  },
-  priceDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  priceMAD: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2D5F3E',
-  },
-  internationalPrices: {
-    alignItems: 'flex-end',
-  },
-  internationalPrice: {
-    fontSize: 14,
-    color: '#666',
-    marginVertical: 1,
   },
   historyContainer: {
     marginTop: 10,
@@ -545,31 +466,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
-  },
-  // RTL styles for Arabic
-  historyHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
-  historyIconRTL: {
-    marginRight: 0,
-    marginLeft: 16,
-  },
-  historyTitleContainerRTL: {
-    alignItems: 'flex-end',
-  },
-  historyTitleRTL: {
-    textAlign: 'right',
-  },
-  historyPeriodRTL: {
-    textAlign: 'right',
-  },
-  historyDescriptionRTL: {
-    textAlign: 'right',
-  },
-  factItemRTL: {
-    flexDirection: 'row-reverse',
-  },
-  factTextRTL: {
-    textAlign: 'right',
   },
 });

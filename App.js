@@ -33,22 +33,16 @@ export default function App() {
           });
         }
         
-        // FOR TESTING: Clear saved language to force welcome screen
-        await AsyncStorage.removeItem('user-language');
-        
-        // Check if language has been selected before
-        const savedLanguage = await AsyncStorage.getItem('user-language');
-        console.log('Saved language:', savedLanguage); // Debug log
-        
-        if (savedLanguage) {
-          setIsLanguageSelected(true);
-        }
+        // Always show welcome screen - don't check for saved language
+        setIsLanguageSelected(false);
         
         // Pre-load any other resources here (fonts, images, etc.)
         await new Promise(resolve => setTimeout(resolve, 1000));
         
       } catch (e) {
         console.warn(e);
+        // On error, still show welcome screen
+        setIsLanguageSelected(false);
       } finally {
         setIsReady(true);
         // Tell the application to render
@@ -60,22 +54,12 @@ export default function App() {
   }, []);
 
   const handleLanguageSelect = (language) => {
-    console.log('Language selected:', language); // Debug log
     setIsLanguageSelected(true);
   };
 
-  // For testing - uncomment this to force show welcome screen
-  // const resetLanguage = async () => {
-  //   await AsyncStorage.removeItem('user-language');
-  //   setIsLanguageSelected(false);
-  // };
-
   if (!isReady) {
-    console.log('App not ready yet...'); // Debug log
     return null; // Show splash screen
   }
-
-  console.log('App ready, isLanguageSelected:', isLanguageSelected); // Debug log
 
   return (
     <SafeAreaProvider>

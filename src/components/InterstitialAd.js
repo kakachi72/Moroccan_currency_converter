@@ -7,7 +7,7 @@ try {
   const AdMobModule = require('react-native-google-mobile-ads');
   InterstitialAd = AdMobModule.InterstitialAd;
 } catch (error) {
-  console.log('AdMob module not available:', error.message);
+  console.error('AdMob module not available:', error.message);
 }
 
 class InterstitialAdManager {
@@ -31,19 +31,26 @@ class InterstitialAdManager {
     });
 
     this.interstitialAd.addAdEventListener('loaded', () => {
-      console.log('Interstitial ad loaded successfully');
       this.isLoaded = true;
       this.isLoading = false;
     });
 
     this.interstitialAd.addAdEventListener('error', (error) => {
-      console.log('Interstitial ad failed to load:', error);
+      // Check if it's a "no fill" error (normal) vs actual error
+      const isNoFill = error.message?.includes('no-fill') || 
+                     error.message?.includes('no fill') ||
+                     error.code === 'no-fill';
+      
+      if (!isNoFill) {
+        // Only log real errors, not "no fill" which is normal
+        console.error('Interstitial ad failed to load:', error);
+      }
+      
       this.isLoaded = false;
       this.isLoading = false;
     });
 
     this.interstitialAd.addAdEventListener('closed', () => {
-      console.log('Interstitial ad closed');
       this.isLoaded = false;
     });
   }
@@ -51,7 +58,6 @@ class InterstitialAdManager {
   // Load interstitial ad
   loadAd() {
     if (!this.isAdMobAvailable || !this.interstitialAd) {
-      console.log('AdMob not available, skipping ad load');
       return Promise.resolve();
     }
 
@@ -60,8 +66,6 @@ class InterstitialAdManager {
     }
 
     this.isLoading = true;
-    console.log('Loading interstitial ad...', this.adUnitId);
-    
     this.interstitialAd.load();
     return Promise.resolve();
   }
@@ -69,16 +73,13 @@ class InterstitialAdManager {
   // Show interstitial ad
   showAd() {
     if (!this.isAdMobAvailable || !this.interstitialAd) {
-      console.log('AdMob not available, skipping ad show');
       return false;
     }
 
     if (!this.isLoaded) {
-      console.log('Interstitial ad not loaded yet');
       return false;
     }
 
-    console.log('Showing interstitial ad...');
     this.interstitialAd.show();
     return true;
   }

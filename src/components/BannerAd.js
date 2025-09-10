@@ -8,11 +8,12 @@ try {
   const AdMobModule = require('react-native-google-mobile-ads');
   BannerAd = AdMobModule.BannerAd;
 } catch (error) {
-  console.log('AdMob module not available:', error.message);
+  console.error('AdMob module not available:', error.message);
 }
 
 export default function BannerAdComponent({ placement = 'default' }) {
   const [isAdMobAvailable, setIsAdMobAvailable] = useState(false);
+  const [adFailed, setAdFailed] = useState(false);
   const isSquareAd = placement.includes('bills_ad') || placement.includes('coins_ad');
   
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function BannerAdComponent({ placement = 'default' }) {
   }, []);
   
   // Use real AdMob banner for non-square ads if available
-  if (!isSquareAd && isAdMobAvailable && BannerAd) {
+  if (!isSquareAd && isAdMobAvailable && BannerAd && !adFailed) {
     return (
       <View style={styles.container}>
         <BannerAd
@@ -31,14 +32,32 @@ export default function BannerAdComponent({ placement = 'default' }) {
             requestNonPersonalizedAdsOnly: false,
           }}
           onAdFailedToLoad={(error) => {
-            console.log('Banner ad failed to load:', error);
+            // Check if it's a "no fill" error (normal) vs actual error
+            const isNoFill = error.message?.includes('no-fill') || 
+                           error.message?.includes('no fill') ||
+                           error.code === 'no-fill';
+            
+            if (isNoFill) {
+              // "No fill" is normal - just hide the ad container
+              setAdFailed(true);
+            } else {
+              // Real error - log it
+              console.error('Banner ad failed to load:', error);
+              setAdFailed(true);
+            }
           }}
           onAdLoaded={() => {
-            console.log('Banner ad loaded successfully');
+            // Ad loaded successfully
+            setAdFailed(false);
           }}
         />
       </View>
     );
+  }
+  
+  // Don't show anything if ad failed to load (no fill or error)
+  if (adFailed) {
+    return null;
   }
   
   // Fallback to placeholder if AdMob not available or square ad

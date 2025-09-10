@@ -35,7 +35,7 @@ export async function fetchExchangeRates() {
     
     throw new Error('Invalid response format');
   } catch (error) {
-    console.log('Free API failed, trying backup...', error);
+    console.error('Free API failed, trying backup...', error);
     
     try {
       // Try backup approach - get USD rates and calculate MAD rates
@@ -65,7 +65,7 @@ export async function fetchExchangeRates() {
         };
       }
     } catch (backupError) {
-      console.log('Backup API also failed:', backupError);
+      console.error('Backup API also failed:', backupError);
     }
     
     // If all APIs fail, try to get cached rates
@@ -103,7 +103,7 @@ async function cacheExchangeRates(rates) {
     await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
     await AsyncStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
   } catch (error) {
-    console.log('Failed to cache exchange rates:', error);
+    console.error('Failed to cache exchange rates:', error);
   }
 }
 
@@ -128,7 +128,7 @@ async function getCachedExchangeRates() {
     
     return null;
   } catch (error) {
-    console.log('Failed to get cached exchange rates:', error);
+    console.error('Failed to get cached exchange rates:', error);
     return null;
   }
 }
