@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { I18nextProvider } from 'react-i18next';
 import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { I18nManager } from 'react-native';
 
 import i18n from './src/translations/i18n';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -12,6 +13,9 @@ import WelcomeScreen from './src/screens/WelcomeScreen';
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
+// IMPORTANT: This app forces LTR (Left-to-Right) layout for ALL languages
+// including Arabic, to ensure consistent UI appearance across all devices
+
 export default function App() {
   const [isLanguageSelected, setIsLanguageSelected] = useState(false);
   const [isReady, setIsReady] = useState(false);
@@ -19,6 +23,10 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
+        // Force LTR layout for all languages (including Arabic)
+        I18nManager.forceRTL(false);
+        I18nManager.allowRTL(false);
+        
         // Wait for i18n to be ready
         if (!i18n.isInitialized) {
           await new Promise((resolve) => {

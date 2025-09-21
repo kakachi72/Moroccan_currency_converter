@@ -476,8 +476,8 @@ export default function QuizScreen() {
               <Text style={styles.startButtonText}>{t('quiz.start')}</Text>
             </TouchableOpacity>
           </View>
-          <BannerAd placement="quiz_welcome_bottom" />
         </View>
+        <BannerAd placement="quiz_welcome_bottom" />
       </ImageBackground>
     );
   }
@@ -560,8 +560,8 @@ export default function QuizScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <BannerAd placement="quiz_gameover_bottom" />
         </View>
+        <BannerAd placement="quiz_gameover_bottom" />
       </ImageBackground>
     );
   }

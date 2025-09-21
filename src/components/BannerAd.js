@@ -27,7 +27,7 @@ export default function BannerAdComponent({ placement = 'default' }) {
       <View style={styles.container}>
         <BannerAd
           unitId={ADMOB_CONFIG.BANNER_AD_UNIT_ID}
-          size="BANNER"
+          size="ADAPTIVE_BANNER"
           requestOptions={{
             requestNonPersonalizedAdsOnly: false,
           }}
@@ -83,8 +83,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     height: 50,
     backgroundColor: '#f0f0f0',
-    marginVertical: 5,
-    borderRadius: 5,
+    marginVertical: 0,
+    marginHorizontal: 0,
+    borderRadius: 0,
+    width: '100%',
   },
   squareContainer: {
     alignItems: 'center',

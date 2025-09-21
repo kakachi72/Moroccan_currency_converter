@@ -18,6 +18,7 @@ import {
   getResponsivePadding,
   getResponsiveMargin
 } from '../utils/responsive';
+import BannerAd from '../components/BannerAd';
 // RTL utilities removed - all languages now use LTR layout
 
 export default function WelcomeScreen({ onLanguageSelect }) {
@@ -78,10 +79,8 @@ export default function WelcomeScreen({ onLanguageSelect }) {
           ))}
         </View>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Made with ❤️ for Morocco
-          </Text>
+        <View style={styles.bannerContainer}>
+          <BannerAd placement="welcome_banner" />
         </View>
         </View>
       </SafeAreaView>
@@ -121,6 +120,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginTop: responsiveHeight(20),
     gap: responsiveHeight(12),
+  },
+  bannerContainer: {
+    marginTop: responsiveHeight(2),
+    marginBottom: responsiveHeight(20),
   },
   languageButton: {
     backgroundColor: '#fff',

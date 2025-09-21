@@ -35,7 +35,7 @@ import {
 } from '../utils/responsive';
 
 export default function ConverterScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const amountInputRef = useRef(null);
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('dirham');
@@ -334,53 +334,118 @@ export default function ConverterScreen() {
 
       {/* From and To Currency Row */}
       <View style={styles.currencyRowContainer}>
-        <View style={styles.currencySelector}>
-          <Text style={styles.currencyLabel}>{t('converter.from')}</Text>
-          <TouchableOpacity 
-            style={styles.pickerWrapper}
-            onPress={() => setShowFromDropdown(true)}
-          >
-            <Text style={styles.pickerText}>
-              {isInternationalMode 
-                ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(fromCurrency)} ${fromCurrency}`
-                : getCurrencyDisplayName(fromCurrency)
-              }
-            </Text>
-            <Text style={styles.dropdownArrow}>▼</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Switch button between dropdowns */}
-        <View style={styles.switchButtonContainer}>
-          <TouchableOpacity
-            accessibilityLabel="Swap currencies"
-            onPress={() => {
-              const prevFrom = fromCurrency;
-              setFromCurrency(toCurrency);
-              setToCurrency(prevFrom);
-              // Reset result after swap
-              setResult(0);
-            }}
-            style={styles.switchButton}
-          >
-            <Text style={styles.switchIcon}>⇄</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.currencySelector}>
-          <Text style={styles.currencyLabel}>{t('converter.to')}</Text>
-          <TouchableOpacity 
-            style={styles.pickerWrapper}
-            onPress={() => setShowToDropdown(true)}
-          >
-            <Text style={styles.pickerText}>
-              {isInternationalMode 
-                ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(toCurrency)} ${toCurrency}`
-                : getCurrencyDisplayName(toCurrency)
-              }
-            </Text>
-            <Text style={styles.dropdownArrow}>▼</Text>
-          </TouchableOpacity>
-        </View>
+        {/* For Arabic: Show To dropdown first (right side) */}
+        {i18n.language === 'ar' ? (
+          <>
+            <View style={styles.currencySelector}>
+              <Text style={styles.currencyLabel}>{t('converter.to')}</Text>
+              <TouchableOpacity 
+                style={styles.pickerWrapper}
+                onPress={() => setShowToDropdown(true)}
+              >
+                <Text style={[
+                  i18n.language === 'ar' ? styles.pickerTextArabic : styles.pickerText, 
+                  { numberOfLines: 1 }
+                ]}>
+                  {isInternationalMode 
+                    ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(toCurrency)} ${toCurrency}`
+                    : getCurrencyDisplayName(toCurrency)
+                  }
+                </Text>
+                <Text style={styles.dropdownArrow}>▼</Text>
+              </TouchableOpacity>
+            </View>
+            {/* Switch button between dropdowns */}
+            <View style={styles.switchButtonContainer}>
+              <TouchableOpacity
+                accessibilityLabel="Swap currencies"
+                onPress={() => {
+                  const prevFrom = fromCurrency;
+                  setFromCurrency(toCurrency);
+                  setToCurrency(prevFrom);
+                  // Reset result after swap
+                  setResult(0);
+                }}
+                style={styles.switchButton}
+              >
+                <Text style={styles.switchIcon}>⇄</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.currencySelector}>
+              <Text style={styles.currencyLabel}>{t('converter.from')}</Text>
+              <TouchableOpacity 
+                style={styles.pickerWrapper}
+                onPress={() => setShowFromDropdown(true)}
+              >
+                <Text style={[
+                  i18n.language === 'ar' ? styles.pickerTextArabic : styles.pickerText, 
+                  { numberOfLines: 1 }
+                ]}>
+                  {isInternationalMode 
+                    ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(fromCurrency)} ${fromCurrency}`
+                    : getCurrencyDisplayName(fromCurrency)
+                  }
+                </Text>
+                <Text style={styles.dropdownArrow}>▼</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.currencySelector}>
+              <Text style={styles.currencyLabel}>{t('converter.from')}</Text>
+              <TouchableOpacity 
+                style={styles.pickerWrapper}
+                onPress={() => setShowFromDropdown(true)}
+              >
+                <Text style={[
+                  i18n.language === 'ar' ? styles.pickerTextArabic : styles.pickerText, 
+                  { numberOfLines: 1 }
+                ]}>
+                  {isInternationalMode 
+                    ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(fromCurrency)} ${fromCurrency}`
+                    : getCurrencyDisplayName(fromCurrency)
+                  }
+                </Text>
+                <Text style={styles.dropdownArrow}>▼</Text>
+              </TouchableOpacity>
+            </View>
+            {/* Switch button between dropdowns */}
+            <View style={styles.switchButtonContainer}>
+              <TouchableOpacity
+                accessibilityLabel="Swap currencies"
+                onPress={() => {
+                  const prevFrom = fromCurrency;
+                  setFromCurrency(toCurrency);
+                  setToCurrency(prevFrom);
+                  // Reset result after swap
+                  setResult(0);
+                }}
+                style={styles.switchButton}
+              >
+                <Text style={styles.switchIcon}>⇄</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.currencySelector}>
+              <Text style={styles.currencyLabel}>{t('converter.to')}</Text>
+              <TouchableOpacity 
+                style={styles.pickerWrapper}
+                onPress={() => setShowToDropdown(true)}
+              >
+                <Text style={[
+                  i18n.language === 'ar' ? styles.pickerTextArabic : styles.pickerText, 
+                  { numberOfLines: 1 }
+                ]}>
+                  {isInternationalMode 
+                    ? `${Platform.OS === 'ios' ? '' : getCurrencyIcon(toCurrency)} ${toCurrency}`
+                    : getCurrencyDisplayName(toCurrency)
+                  }
+                </Text>
+                <Text style={styles.dropdownArrow}>▼</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
 
 
@@ -444,6 +509,9 @@ export default function ConverterScreen() {
             <FlatList
               data={availableCurrencies}
               keyExtractor={(item) => item.code}
+              showsVerticalScrollIndicator={true}
+              bounces={false}
+              nestedScrollEnabled={true}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
@@ -482,6 +550,9 @@ export default function ConverterScreen() {
             <FlatList
               data={availableCurrencies}
               keyExtractor={(item) => item.code}
+              showsVerticalScrollIndicator={true}
+              bounces={false}
+              nestedScrollEnabled={true}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
@@ -582,10 +653,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: responsiveHeight(15),
     paddingHorizontal: getResponsivePadding(),
+    gap: responsiveWidth(10),
   },
   currencySelector: {
     flex: 1,
-    marginHorizontal: getResponsiveMargin(),
+    marginHorizontal: responsiveWidth(5),
+    minWidth: responsiveWidth(120),
   },
   currencyLabel: {
     fontSize: isSmallScreen() ? responsiveFontSize(12) : 
@@ -623,6 +696,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000000',
     flex: 1,
+    numberOfLines: 1,
+  },
+  pickerTextArabic: {
+    fontSize: isSmallScreen() ? responsiveFontSize(14) : 
+              isTablet() ? responsiveFontSize(18) : responsiveFontSize(16),
+    fontWeight: '600',
+    color: '#000000',
+    flex: 1,
+    numberOfLines: 1,
+    textAlign: 'right',
+    writingDirection: 'rtl',
   },
   dropdownArrow: {
     fontSize: isSmallScreen() ? responsiveFontSize(10) : 
@@ -636,9 +720,9 @@ const styles = StyleSheet.create({
     paddingBottom: isSmallScreen() ? responsiveHeight(4) : responsiveHeight(6),
   },
   switchButton: {
-    width: responsiveWidth(34),
-    height: responsiveWidth(34),
-    borderRadius: responsiveWidth(17),
+    width: responsiveWidth(28),
+    height: responsiveWidth(28),
+    borderRadius: responsiveWidth(14),
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
@@ -668,7 +752,7 @@ const styles = StyleSheet.create({
     padding: isSmallScreen() ? responsiveHeight(15) : 
              isTablet() ? responsiveHeight(25) : responsiveHeight(20),
     margin: isSmallScreen() ? responsiveHeight(15) : responsiveHeight(20),
-    maxHeight: isSmallScreen() ? '60%' : '70%',
+    maxHeight: isSmallScreen() ? '50%' : '55%',
     minWidth: isSmallScreen() ? '90%' : '80%',
     maxWidth: isTablet() ? responsiveWidth(500) : '90%',
     shadowColor: '#000',
