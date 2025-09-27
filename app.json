@@ -2,10 +2,9 @@
   "expo": {
     "name": "Dirhamy",
     "slug": "dirhamy",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-
     "scheme": "dirhamy",
     "userInterfaceStyle": "light",
     "splash": {
@@ -31,12 +30,12 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "eas": {
-        "projectId": "1fcc4ffa-7ed7-463b-b40c-5c16ef7def4e"
-      },
       "react-native-google-mobile-ads": {
         "android_app_id": "ca-app-pub-5705725180630568~6839355333",
         "ios_app_id": "ca-app-pub-5705725180630568~6839355333"
+      },
+      "eas": {
+        "projectId": "3a15f93d-080b-429f-8a7e-de8daa10a84d"
       }
     },
     "plugins": [
@@ -47,6 +46,7 @@
           "iosAppId": "ca-app-pub-5705725180630568~6839355333"
         }
       ]
-    ]
+    ],
+    "owner": "hossein7"
   }
 }
