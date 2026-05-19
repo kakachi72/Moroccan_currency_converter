@@ -88,38 +88,38 @@ export default function QuizScreen() {
     const stage1Questions = [
       {
         stage: 1,
-        question: t('quiz.questions.5000francs'),
+        questionKey: 'quiz.questions.5000francs',
         answer: convertMoroccanCurrency(5000, 'franc', 'dirham'),
         options: [5, 50, 500, 5000],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 1,
-        question: t('quiz.questions.20ryals'),
+        questionKey: 'quiz.questions.20ryals',
         answer: convertMoroccanCurrency(20, 'ryal', 'dirham'),
         options: [0.1, 1, 10, 100],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 1,
-        question: t('quiz.questions.250centimes'),
+        questionKey: 'quiz.questions.250centimes',
         answer: convertMoroccanCurrency(250, 'centime', 'dirham'),
         options: [2.5, 25, 250, 2500],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 1,
-        question: t('quiz.questions.100dh'),
+        questionKey: 'quiz.questions.100dh',
         answer: convertMoroccanCurrency(100, 'dirham', 'centime'),
         options: [100, 1000, 10000, 100000],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
       {
         stage: 1,
-        question: t('quiz.questions.50francs'),
+        questionKey: 'quiz.questions.50francs',
         answer: convertMoroccanCurrency(50, 'franc', 'dirham'),
         options: [0.5, 5, 50, 500],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
     ];
 
@@ -127,38 +127,38 @@ export default function QuizScreen() {
     const stage2Questions = [
       {
         stage: 2,
-        question: t('quiz.questions.1000centimes'),
+        questionKey: 'quiz.questions.1000centimes',
         answer: convertMoroccanCurrency(1000, 'centime', 'dirham'),
         options: [1, 10, 100, 1000],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 2,
-        question: t('quiz.questions.40ryals'),
+        questionKey: 'quiz.questions.40ryals',
         answer: convertMoroccanCurrency(40, 'ryal', 'dirham'),
         options: [0.2, 2, 20, 200],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 2,
-        question: t('quiz.questions.5dh'),
+        questionKey: 'quiz.questions.5dh',
         answer: convertMoroccanCurrency(5, 'dirham', 'centime'),
         options: [5, 50, 500, 5000],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
       {
         stage: 2,
-        question: t('quiz.questions.200francs'),
+        questionKey: 'quiz.questions.200francs',
         answer: convertMoroccanCurrency(200, 'franc', 'dirham'),
         options: [2, 20, 200, 2000],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 2,
-        question: t('quiz.questions.15dh'),
+        questionKey: 'quiz.questions.15dh',
         answer: convertMoroccanCurrency(15, 'dirham', 'ryal'),
         options: [3, 30, 300, 3000],
-        unit: 'ryals'
+        unitKey: 'ryal'
       },
     ];
 
@@ -166,38 +166,38 @@ export default function QuizScreen() {
     const stage3Questions = [
       {
         stage: 3,
-        question: t('quiz.questions.500ryals'),
+        questionKey: 'quiz.questions.500ryals',
         answer: convertMoroccanCurrency(500, 'ryal', 'dirham'),
         options: [2.5, 25, 250, 2500],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 3,
-        question: t('quiz.questions.75dh'),
+        questionKey: 'quiz.questions.75dh',
         answer: convertMoroccanCurrency(75, 'dirham', 'franc'),
         options: [7.5, 75, 750, 7500],
-        unit: 'francs'
+        unitKey: 'franc'
       },
       {
         stage: 3,
-        question: t('quiz.questions.1500centimes'),
+        questionKey: 'quiz.questions.1500centimes',
         answer: convertMoroccanCurrency(1500, 'centime', 'dirham'),
         options: [1.5, 15, 150, 1500],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 3,
-        question: t('quiz.questions.30dh'),
+        questionKey: 'quiz.questions.30dh',
         answer: convertMoroccanCurrency(30, 'dirham', 'ryal'),
         options: [6, 60, 600, 6000],
-        unit: 'ryals'
+        unitKey: 'ryal'
       },
       {
         stage: 3,
-        question: t('quiz.questions.800francs'),
+        questionKey: 'quiz.questions.800francs',
         answer: convertMoroccanCurrency(800, 'franc', 'dirham'),
         options: [8, 80, 800, 8000],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
     ];
 
@@ -205,38 +205,38 @@ export default function QuizScreen() {
     const stage4Questions = [
       {
         stage: 4,
-        question: t('quiz.questions.1200ryals'),
+        questionKey: 'quiz.questions.1200ryals',
         answer: convertMoroccanCurrency(1200, 'ryal', 'dirham'),
         options: [6, 60, 600, 6000],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 4,
-        question: t('quiz.questions.45dh'),
+        questionKey: 'quiz.questions.45dh',
         answer: convertMoroccanCurrency(45, 'dirham', 'centime'),
         options: [4.5, 45, 450, 4500],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
       {
         stage: 4,
-        question: t('quiz.questions.2000francs'),
+        questionKey: 'quiz.questions.2000francs',
         answer: convertMoroccanCurrency(2000, 'franc', 'dirham'),
         options: [20, 200, 2000, 20000],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
       {
         stage: 4,
-        question: t('quiz.questions.90dh'),
+        questionKey: 'quiz.questions.90dh',
         answer: convertMoroccanCurrency(90, 'dirham', 'ryal'),
         options: [18, 180, 1800, 18000],
-        unit: 'ryals'
+        unitKey: 'ryal'
       },
       {
         stage: 4,
-        question: t('quiz.questions.3500centimes'),
+        questionKey: 'quiz.questions.3500centimes',
         answer: convertMoroccanCurrency(3500, 'centime', 'dirham'),
         options: [3.5, 35, 350, 3500],
-        unit: 'DH'
+        unitKey: 'dirham'
       },
     ];
 
@@ -244,38 +244,38 @@ export default function QuizScreen() {
     let stage5Questions = [
       {
         stage: 5,
-        question: t('quiz.questions.1000dh'),
+        questionKey: 'quiz.questions.1000dh',
         answer: convertMoroccanCurrency(1000, 'dirham', 'centime'),
         options: [10000, 100000, 1000000, 10000000],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
       {
         stage: 5,
-        question: t('quiz.questions.5000dh'),
+        questionKey: 'quiz.questions.5000dh',
         answer: convertMoroccanCurrency(5000, 'dirham', 'centime'),
         options: [50000, 500000, 5000000, 50000000],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
       {
         stage: 5,
-        question: t('quiz.questions.10000dh'),
+        questionKey: 'quiz.questions.10000dh',
         answer: convertMoroccanCurrency(10000, 'dirham', 'centime'),
         options: [100000, 1000000, 10000000, 100000000],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
       {
         stage: 5,
-        question: t('quiz.questions.50000dh'),
+        questionKey: 'quiz.questions.50000dh',
         answer: convertMoroccanCurrency(50000, 'dirham', 'centime'),
         options: [500000, 5000000, 50000000, 500000000],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
       {
         stage: 5,
-        question: t('quiz.questions.100000dh'),
+        questionKey: 'quiz.questions.100000dh',
         answer: convertMoroccanCurrency(100000, 'dirham', 'centime'),
         options: [1000000, 10000000, 100000000, 1000000000],
-        unit: 'centimes'
+        unitKey: 'centime'
       },
     ];
 
@@ -576,19 +576,19 @@ export default function QuizScreen() {
       resizeMode="cover"
     >
       <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-        <View style={styles.header}>
-          <View style={styles.questionInfo}>
-            <Text style={styles.questionCounter}>
+        <View style={[styles.header, { flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' }]}>
+          <View style={[styles.questionInfo, { alignItems: i18n.language === 'ar' ? 'flex-end' : 'flex-start' }]}>
+            <Text style={[styles.questionCounter, { textAlign: i18n.language === 'ar' ? 'right' : 'left' }]}>
               {t('quiz.question')} {currentQuestion + 1}/{questions.length}
             </Text>
-            <Text style={styles.stageInfo}>
+            <Text style={[styles.stageInfo, { textAlign: i18n.language === 'ar' ? 'right' : 'left' }]}>
               {t('quiz.stage')} {currentStage}/5
             </Text>
           </View>
-          <View style={styles.scoreContainer}>
-            <Text style={styles.scoreLabel}>{t('quiz.score')}:</Text>
-            <Text style={styles.scoreNumber}>{score} DH</Text>
-            <View style={styles.banknoteContainer}>
+          <View style={[styles.scoreContainer, { alignItems: i18n.language === 'ar' ? 'flex-start' : 'flex-end' }]}>
+            <Text style={[styles.scoreLabel, { textAlign: i18n.language === 'ar' ? 'left' : 'right' }]}>{t('quiz.score')}:</Text>
+            <Text style={[styles.scoreNumber, { textAlign: i18n.language === 'ar' ? 'left' : 'right' }]}>{score} DH</Text>
+            <View style={[styles.banknoteContainer, { justifyContent: i18n.language === 'ar' ? 'flex-start' : 'flex-end' }]}>
               {getScoreBanknotes().map((banknote, index) => (
                 <View key={index} style={styles.banknoteWrapper}>
                   <Image
@@ -616,8 +616,8 @@ export default function QuizScreen() {
         )}
 
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>
-            {question.question}
+          <Text style={[styles.questionText, { textAlign: i18n.language === 'ar' ? 'right' : 'center' }]}>
+            {t(question.questionKey)}
           </Text>
         </View>
 
@@ -639,7 +639,7 @@ export default function QuizScreen() {
                 selectedAnswer === option && styles.selectedOptionText,
                 selectedAnswer !== null && option === question.answer && styles.correctOptionText,
               ]}>
-                {formatNumber(option)} {question.unit}
+                {formatNumber(option)} {t(`converter.currencies.${question.unitKey}`)}
               </Text>
             </TouchableOpacity>
           ))}

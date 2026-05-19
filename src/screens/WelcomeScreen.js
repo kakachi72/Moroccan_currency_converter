@@ -74,7 +74,7 @@ export default function WelcomeScreen({ onLanguageSelect }) {
               style={styles.languageButton}
               onPress={() => handleLanguageSelect(lang.code)}
             >
-              <Text style={styles.flag}>{lang.flag}</Text>
+              <Text style={styles.flagText}>{lang.flag}</Text>
               <Text style={styles.languageName}>{lang.name}</Text>
             </TouchableOpacity>
           ))}
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: responsiveHeight(30),
+    marginTop: responsiveHeight(10),
   },
   logo: {
     width: responsiveWidth(250),
@@ -118,33 +118,38 @@ const styles = StyleSheet.create({
   },
   languageContainer: {
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(20),
-    gap: responsiveHeight(12),
+    marginTop: responsiveHeight(10),
+    gap: responsiveHeight(10),
+    paddingHorizontal: responsiveWidth(45),
   },
   bannerContainer: {
     marginTop: responsiveHeight(30),
     marginBottom: responsiveHeight(20),
   },
   languageButton: {
-    backgroundColor: '#fff',
-    borderRadius: responsiveWidth(12),
-    paddingVertical: responsiveHeight(12),
-    paddingHorizontal: responsiveWidth(20),
+    backgroundColor: '#ffffff',
+    borderRadius: responsiveWidth(10),
+    paddingVertical: responsiveHeight(10),
+    paddingHorizontal: responsiveWidth(14),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center', // Center the content
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#2D5F3E',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  flag: {
+  flagText: {
     fontSize: responsiveFontSize(24),
-    marginRight: responsiveWidth(15),
+    marginRight: responsiveWidth(12),
+    textAlign: 'center',
+    color: '#2D5F3E',
   },
   languageName: {
-    fontSize: responsiveFontSize(16),
+    fontSize: responsiveFontSize(18),
     fontWeight: 'bold',
     color: '#2D5F3E',
   },

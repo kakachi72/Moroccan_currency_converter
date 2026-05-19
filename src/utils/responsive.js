@@ -8,11 +8,11 @@ const BASE_HEIGHT = 844;
 
 // Responsive width and height
 export const responsiveWidth = (size) => {
-  return (SCREEN_WIDTH / BASE_WIDTH) * size;
+  return Math.round((SCREEN_WIDTH / BASE_WIDTH) * size);
 };
 
 export const responsiveHeight = (size) => {
-  return (SCREEN_HEIGHT / BASE_HEIGHT) * size;
+  return Math.round((SCREEN_HEIGHT / BASE_HEIGHT) * size);
 };
 
 // Responsive font size
