@@ -222,9 +222,9 @@ export default function TouristScreen() {
       {selectedTab === 'bills' && (
         <View style={styles.content}>
           <Text style={styles.sectionTitle}>{t('tourist.bills')}</Text>
-          <Text style={styles.sectionDescription}>
-            Moroccan banknotes come in denominations of 20, 50, 100, and 200 dirhams.
-          </Text>
+          <View style={{ marginBottom: 20 }}>
+            <BannerAd placement="tourist_bills_ad" />
+          </View>
           <View style={styles.denominationGrid}>
             {bills.map(renderDenomination)}
           </View>
@@ -234,9 +234,9 @@ export default function TouristScreen() {
       {selectedTab === 'coins' && (
         <View style={styles.content}>
           <Text style={styles.sectionTitle}>{t('tourist.coins')}</Text>
-          <Text style={styles.sectionDescription}>
-            Moroccan coins include 1, 2, 5, and 10 dirhams, plus smaller denominations.
-          </Text>
+          <View style={{ marginBottom: 20 }}>
+            <BannerAd placement="tourist_coins_ad" />
+          </View>
           <View style={styles.denominationGrid}>
             {coins.map(renderDenomination)}
           </View>
@@ -255,16 +255,10 @@ export default function TouristScreen() {
         </View>
       )}
 
-      {/* Banner Ad before Tips */}
-      <BannerAd placement="tourist_banner" />
-
-      <View style={styles.conversionTip}>
-        <Text style={styles.tipTitle}>💡 {t('common.tip')}</Text>
-        <Text style={styles.tipText}>
-          Use the Converter tab to get real-time exchange rates between Moroccan Dirhams and your home currency.
-        </Text>
-      </View>
       </ScrollView>
+
+      {/* Banner Ad fixed at the bottom of the screen */}
+      <BannerAd placement="tourist_top_banner" />
     </ImageBackground>
   );
 }
@@ -447,24 +441,5 @@ const styles = StyleSheet.create({
     color: '#555',
     lineHeight: 22,
     flex: 1,
-  },
-  conversionTip: {
-    backgroundColor: '#e8f5e8',
-    margin: 20,
-    padding: 16,
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#4CAF50',
-  },
-  tipTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2D5F3E',
-    marginBottom: 8,
-  },
-  tipText: {
-    fontSize: 14,
-    color: '#333',
-    lineHeight: 20,
   },
 });

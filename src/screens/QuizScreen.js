@@ -315,7 +315,7 @@ export default function QuizScreen() {
       // Define bill values for each question (cycling through 20, 25, 50, 100, 200)
       const billValues = [20, 25, 50, 100, 200];
       const billValue = billValues[currentQuestion % billValues.length];
-      
+
       setScore(score + billValue);
       setCorrectAnswers(correctAnswers + 1);
       setEarnedBills([...earnedBills, { value: billValue, image: getBanknoteImage(billValue) }]);
@@ -344,13 +344,13 @@ export default function QuizScreen() {
   const nextQuestion = () => {
     setSelectedAnswer(null);
     setShowResult(false);
-    
+
     if (currentQuestion + 1 >= questions.length) {
       endGame();
     } else {
       const nextQuestionIndex = currentQuestion + 1;
       const newStage = Math.ceil((nextQuestionIndex + 1) / QUESTIONS_PER_STAGE);
-      
+
       // Check if we're moving to a new stage
       if (newStage > currentStage) {
         // Calculate stage score (correct answers in current stage)
@@ -369,7 +369,7 @@ export default function QuizScreen() {
   const continueToNextStage = () => {
     setStageBreak(false);
     setCurrentQuestion(currentQuestion + 1);
-    
+
     // Show interstitial ad after each stage completion
     setTimeout(() => {
       showInterstitialAd();
@@ -382,7 +382,7 @@ export default function QuizScreen() {
     setGameEnded(true);
     setGameStarted(false);
     saveBestScore(correctAnswers);
-    
+
     // Show interstitial ad after quiz completion
     setTimeout(() => {
       showInterstitialAd();
@@ -410,10 +410,10 @@ export default function QuizScreen() {
       const shareMessage = `I scored ${correctAnswers}/${QUESTIONS_PER_GAME} in Dirhamy! ${score} DH total. Try the app: ${appUrl}`;
 
       // Simple text-only sharing
-      await Share.share({ 
-        message: shareMessage, 
+      await Share.share({
+        message: shareMessage,
         title: t('quiz.title'),
-        url: appUrl 
+        url: appUrl
       });
     } catch (error) {
       console.error('Error sharing result:', error);
@@ -453,8 +453,8 @@ export default function QuizScreen() {
 
   if (!gameStarted && !gameEnded) {
     return (
-      <ImageBackground 
-        source={require('../../assets/background.png')} 
+      <ImageBackground
+        source={require('../../assets/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -464,7 +464,7 @@ export default function QuizScreen() {
             <Text style={styles.welcomeDescription}>
               {t('quiz.description')}
             </Text>
-            
+
             {bestScore > 0 && (
               <View style={styles.bestScoreContainer}>
                 <Text style={styles.bestScoreLabel}>{t('quiz.bestScore')}</Text>
@@ -484,8 +484,8 @@ export default function QuizScreen() {
 
   if (stageBreak) {
     return (
-      <ImageBackground 
-        source={require('../../assets/background.png')} 
+      <ImageBackground
+        source={require('../../assets/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -520,8 +520,8 @@ export default function QuizScreen() {
 
   if (gameEnded) {
     return (
-      <ImageBackground 
-        source={require('../../assets/background.png')} 
+      <ImageBackground
+        source={require('../../assets/background.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -546,7 +546,7 @@ export default function QuizScreen() {
                 ))}
               </View>
             </View>
-            
+
             {score > bestScore && (
               <Text style={styles.newRecord}>{t('quiz.newRecord')}! 🎉</Text>
             )}
@@ -570,17 +570,17 @@ export default function QuizScreen() {
   if (!question) return null;
 
   return (
-    <ImageBackground 
-      source={require('../../assets/background.png')} 
+    <ImageBackground
+      source={require('../../assets/background.png')}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
       <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <View style={styles.header}>
           <View style={styles.questionInfo}>
-          <Text style={styles.questionCounter}>
-            {t('quiz.question')} {currentQuestion + 1}/{questions.length}
-          </Text>
+            <Text style={styles.questionCounter}>
+              {t('quiz.question')} {currentQuestion + 1}/{questions.length}
+            </Text>
             <Text style={styles.stageInfo}>
               {t('quiz.stage')} {currentStage}/5
             </Text>
@@ -595,7 +595,7 @@ export default function QuizScreen() {
                     source={banknote.image}
                     style={styles.banknoteImage}
                     resizeMode="contain"
-                      onError={() => console.error('Image failed to load:', banknote.value)}
+                    onError={() => console.error('Image failed to load:', banknote.value)}
                   />
                   <Text style={styles.banknoteValue}>{banknote.value}DH</Text>
                 </View>
@@ -611,8 +611,8 @@ export default function QuizScreen() {
               { color: isCorrect ? '#4CAF50' : '#F44336' }
             ]}>
               {isCorrect ? t('quiz.correct') : t('quiz.incorrect')}
-          </Text>
-        </View>
+            </Text>
+          </View>
         )}
 
         <View style={styles.questionContainer}>
@@ -634,7 +634,7 @@ export default function QuizScreen() {
               onPress={() => selectAnswer(option)}
               disabled={selectedAnswer !== null}
             >
-              <Text style={[ 
+              <Text style={[
                 styles.optionText,
                 selectedAnswer === option && styles.selectedOptionText,
                 selectedAnswer !== null && option === question.answer && styles.correctOptionText,
@@ -661,8 +661,9 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingTop: 80,
   },
   welcomeTitle: {
     fontSize: 28,

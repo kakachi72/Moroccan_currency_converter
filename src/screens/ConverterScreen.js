@@ -24,6 +24,8 @@ import {
 } from '../utils/currencyUtils';
 import { fetchExchangeRates, convertWithRates } from '../services/currencyApi';
 import CurrencyBreakdown from '../components/CurrencyBreakdown';
+import BannerAdComponent from '../components/BannerAd';
+import { interstitialAdManager } from '../components/InterstitialAd';
 import { 
   responsiveWidth, 
   responsiveHeight, 
@@ -34,9 +36,12 @@ import {
   isTablet
 } from '../utils/responsive';
 
+
 export default function ConverterScreen() {
   const { t, i18n } = useTranslation();
   const amountInputRef = useRef(null);
+  // Track number of conversions to trigger interstitial every 5
+  const convertCountRef = useRef(0);
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('dirham');
   const [toCurrency, setToCurrency] = useState('ryal');
@@ -48,6 +53,7 @@ export default function ConverterScreen() {
   const [isInternationalMode, setIsInternationalMode] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showToDropdown, setShowToDropdown] = useState(false);
+
 
   const currencies = getAvailableCurrencies();
   const allCurrencies = [...currencies.moroccan, ...currencies.international];
@@ -63,6 +69,11 @@ export default function ConverterScreen() {
     }
   }, [isInternationalMode]);
 
+  // Preload interstitial ad on mount
+  useEffect(() => {
+    interstitialAdManager.preloadAd();
+  }, []);
+
   // Auto-focus the input when component mounts
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -73,6 +84,7 @@ export default function ConverterScreen() {
 
     return () => clearTimeout(timer);
   }, []);
+
 
   const loadExchangeRates = async () => {
     setIsLoading(true);
@@ -114,7 +126,18 @@ export default function ConverterScreen() {
     }
 
     setResult(convertedAmount);
+
+    // Increment convert counter and show interstitial every 5 conversions
+    convertCountRef.current += 1;
+    if (convertCountRef.current % 5 === 0) {
+      const shown = interstitialAdManager.showAd();
+      if (!shown) {
+        // Ad not ready yet — preload for next time
+        interstitialAdManager.preloadAd();
+      }
+    }
   };
+
 
   const handleModeToggle = () => {
     const newMode = !isInternationalMode;
@@ -573,10 +596,15 @@ export default function ConverterScreen() {
           </View>
         </TouchableOpacity>
       </Modal>
+
       </ScrollView>
+
+      {/* Banner Ad fixed at the bottom of the converter (above menu) */}
+      <BannerAdComponent placement="converter_banner" />
     </ImageBackground>
   );
 }
+
 
 const styles = StyleSheet.create({
   scrollContent: {

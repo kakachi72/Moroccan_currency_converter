@@ -14,20 +14,20 @@ try {
 export default function BannerAdComponent({ placement = 'default' }) {
   const [isAdMobAvailable, setIsAdMobAvailable] = useState(false);
   const [adFailed, setAdFailed] = useState(false);
-  const isSquareAd = placement.includes('bills_ad') || placement.includes('coins_ad');
+  const isSquareAd = placement.includes('bills_ad') || placement.includes('coins_ad') || placement === 'welcome_banner' || placement === 'quiz_welcome_bottom';
   
   useEffect(() => {
     // Check if AdMob is available
     setIsAdMobAvailable(BannerAd !== null);
   }, []);
   
-  // Use real AdMob banner for non-square ads if available
-  if (!isSquareAd && isAdMobAvailable && BannerAd && !adFailed) {
+  // Use real AdMob banner if available
+  if (isAdMobAvailable && BannerAd && !adFailed) {
     return (
-      <View style={styles.container}>
+      <View style={isSquareAd ? styles.squareContainer : styles.container}>
         <BannerAd
           unitId={ADMOB_CONFIG.BANNER_AD_UNIT_ID}
-          size="ADAPTIVE_BANNER"
+          size={isSquareAd ? "MEDIUM_RECTANGLE" : "ADAPTIVE_BANNER"}
           requestOptions={{
             requestNonPersonalizedAdsOnly: false,
           }}

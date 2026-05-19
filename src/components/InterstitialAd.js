@@ -52,6 +52,11 @@ class InterstitialAdManager {
 
     this.interstitialAd.addAdEventListener('closed', () => {
       this.isLoaded = false;
+      // Automatically reload a fresh ad after it's dismissed
+      setTimeout(() => {
+        this.setupAd();
+        this.loadAd();
+      }, 500);
     });
   }
 

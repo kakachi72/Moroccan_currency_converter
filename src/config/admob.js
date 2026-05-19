@@ -36,8 +36,11 @@ export const ADMOB_CONFIG = {
 // Ad placement configuration
 export const AD_PLACEMENTS = {
   SETTINGS_BANNER: 'settings_banner',
-  TOURIST_BANNER: 'tourist_banner',
+  TOURIST_TOP_BANNER: 'tourist_top_banner',
   TOURIST_BILLS_AD: 'tourist_bills_ad',
   TOURIST_COINS_AD: 'tourist_coins_ad',
+  QUIZ_WELCOME_TOP: 'quiz_welcome_top',
   QUIZ_INTERSTITIAL: 'quiz_interstitial',
+  CONVERTER_BANNER: 'converter_banner',
+  CONVERTER_INTERSTITIAL: 'converter_interstitial',
 };

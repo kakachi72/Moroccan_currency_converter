@@ -4,11 +4,12 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   ImageBackground,
   Image,
+  ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
@@ -57,7 +58,7 @@ export default function WelcomeScreen({ onLanguageSelect }) {
       <SafeAreaView style={styles.container}>
         <StatusBar style="light" backgroundColor="#2D5F3E" />
         
-        <View style={styles.content}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Image 
             source={require('../../assets/logo.png')} 
@@ -82,7 +83,7 @@ export default function WelcomeScreen({ onLanguageSelect }) {
         <View style={styles.bannerContainer}>
           <BannerAd placement="welcome_banner" />
         </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </ImageBackground>
   );
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'space-between',
     padding: getResponsivePadding(),
   },
@@ -116,13 +117,12 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   languageContainer: {
-    flex: 1,
     justifyContent: 'flex-start',
     marginTop: responsiveHeight(20),
     gap: responsiveHeight(12),
   },
   bannerContainer: {
-    marginTop: responsiveHeight(2),
+    marginTop: responsiveHeight(30),
     marginBottom: responsiveHeight(20),
   },
   languageButton: {
