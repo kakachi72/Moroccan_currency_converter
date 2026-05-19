@@ -326,19 +326,7 @@ export default function ConverterScreen() {
         <Text style={styles.modeLabel}>{t('converter.international')}</Text>
       </View>
 
-      {/* Status Container - only show for international mode */}
-      {isInternationalMode && (
-        <View style={styles.statusContainer}>
-          <Text style={[styles.statusText, { color: isOnline ? '#4CAF50' : '#FF9800' }]}>
-            {isOnline ? t('common.online') : t('common.offline')}
-          </Text>
-          {lastUpdate && (
-            <Text style={styles.lastUpdateText}>
-              {t('common.lastUpdate')}: {new Date(lastUpdate).toLocaleTimeString()}
-            </Text>
-          )}
-        </View>
-      )}
+
 
       {/* Large Amount Display */}
       <View style={styles.amountDisplayContainer}>
