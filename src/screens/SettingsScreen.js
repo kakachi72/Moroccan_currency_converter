@@ -70,7 +70,7 @@ export default function SettingsScreen() {
   const showAbout = () => {
     Alert.alert(
       t('settings.about'),
-      `${t('settings.aboutDescription')}\n\n${t('settings.features')}\n\n${t('settings.developer')}\n\n${t('settings.version')}: ${Constants.expoConfig?.version || '1.1.1'}`,
+      `${t('settings.aboutDescription')}\n\n${t('settings.features')}\n\n${t('settings.developer')}\n\n${t('settings.version')}: ${Constants.expoConfig?.version || '1.1.2'}`,
       [{ text: t('common.ok') }]
     );
   };
@@ -171,7 +171,7 @@ export default function SettingsScreen() {
         <TouchableOpacity style={styles.actionButton} onPress={showAbout}>
           <Text style={styles.actionButtonText}>{t('settings.about')}</Text>
           <Text style={styles.actionButtonDescription}>
-            {t('settings.version')}: {Constants.expoConfig?.version || '1.1.1'}
+            {t('settings.version')}: {Constants.expoConfig?.version || '1.1.2'}
           </Text>
         </TouchableOpacity>
       </View>
