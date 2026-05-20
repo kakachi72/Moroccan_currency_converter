@@ -43,7 +43,8 @@ class InterstitialAdManager {
       
       if (!isNoFill) {
         // Only log real errors, not "no fill" which is normal
-        console.error('Interstitial ad failed to load:', error);
+        // Log as simple log instead of error to prevent RedBox with ad blockers
+        console.log('Interstitial ad failed to load:', error.message);
       }
       
       this.isLoaded = false;

@@ -41,8 +41,8 @@ export default function BannerAdComponent({ placement = 'default' }) {
               // "No fill" is normal - just hide the ad container
               setAdFailed(true);
             } else {
-              // Real error - log it
-              console.error('Banner ad failed to load:', error);
+              // Real error - log it as warn to prevent RedBox crash with ad blockers like AdGuard
+              console.log('Banner ad failed to load:', error.message);
               setAdFailed(true);
             }
           }}

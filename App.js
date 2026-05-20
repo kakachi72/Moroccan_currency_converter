@@ -26,7 +26,7 @@ export default function App() {
         // Force LTR layout for all languages (including Arabic)
         I18nManager.forceRTL(false);
         I18nManager.allowRTL(false);
-        
+
         // Wait for i18n to be ready
         if (!i18n.isInitialized) {
           await new Promise((resolve) => {
@@ -40,13 +40,13 @@ export default function App() {
             checkInitialized();
           });
         }
-        
+
         // Always show welcome screen - don't check for saved language
         setIsLanguageSelected(false);
-        
+
         // Pre-load any other resources here (fonts, images, etc.)
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
       } catch (e) {
         console.warn(e);
         // On error, still show welcome screen
